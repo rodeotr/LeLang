@@ -1,0 +1,139 @@
+﻿<UserControl x:Class="SubProgWPF.Views.LeftPanel.TabDashBoardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SubProgWPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <TextBlock Text="Thursday" Foreground="#fff" FontSize="20" Margin="10 40 0 30"/>
+        </Grid>
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" Height="200">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Style="{StaticResource dashTopCard}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"  Foreground="#fff" Text="TV Series" FontSize="20" Opacity="1" Margin="10 3"/>
+                    <Rectangle Grid.Row="1" Grid.Column="1" Width="auto" Height="0.5" Fill="#fff" Margin="7 0"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Text="Total Episodes" Margin="25 10" Foreground="#fff" FontSize="16" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Text="{Binding TotalTVEpisodes}"  Margin="0 0" Foreground="#fff" FontSize="50" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                        <Rectangle Grid.Column="1" Fill="#fff" Margin="0 10" Width="0.5"/>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Total Words" Margin="30 10" Foreground="#fff" FontSize="16" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Text="{Binding TotalTVWords}"  Margin="0 0" Foreground="#fff" FontSize="50" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource dashTopCard}" Background="#c41451">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0"  Foreground="#fff" Text="Movies" FontSize="20" Opacity="1" Margin="10 3"/>
+                    <Rectangle Grid.Row="1" Grid.Column="1" Width="auto" Height="0.5" Fill="#fff" Margin="7 0"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <TextBlock Grid.Row="0" Text="Total Movies" Margin="25 10" Foreground="#fff" FontSize="16" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Text="{Binding TotalMovies}"  Margin="0 0" Foreground="#fff" FontSize="50" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                        <Rectangle Grid.Column="1" Fill="#fff" Margin="0 10" Width="0.5"/>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Total Words" Margin="30 10" Foreground="#fff" FontSize="16" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Text="{Binding TotalMovieWords}"  Margin="0 0" Foreground="#fff" FontSize="50" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource dashTopCard}" Background="#3d679c">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Foreground="#fff" Text="Videos &amp; Podcasts" FontSize="20" Opacity="1" Margin="10 3"/>
+                    <Rectangle Grid.Row="1" Width="auto" Height="0.5" Fill="#fff" Margin="7 0"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Total Episodes" Margin="25 10" Foreground="#fff" FontSize="16" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Text="{Binding TotalVideoPodcasts}"  Margin="0 0" Foreground="#fff" FontSize="50" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                        <Rectangle Grid.Column="1" Fill="#fff" Margin="0 10" Width="0.5"/>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="Total Words" Margin="30 10" Foreground="#fff" FontSize="16" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <TextBlock Grid.Row="1" Text="{Binding TotalVideoPodcastsWords}"  Margin="0 0" Foreground="#fff" FontSize="50" TextAlignment="Center" TextWrapping="Wrap"/>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

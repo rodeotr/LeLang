@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SubProgWPF": {
+      "commandName": "Project",
+      "sqlDebugging": true
+    }
+  }
+}
