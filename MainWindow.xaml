@@ -4,93 +4,90 @@
         xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks" 
         xmlns:views="clr-namespace:SubProgWPF.Views"
         xmlns:viewsLearn="clr-namespace:SubProgWPF.Views.Learn"
+        xmlns:viewsCollections="clr-namespace:SubProgWPF.Views.Collections"
         xmlns:viewsLeftPanel="clr-namespace:SubProgWPF.Views.LeftPanel"
         xmlns:vms="clr-namespace:SubProgWPF.ViewModels"
+        xmlns:vmsLearning="clr-namespace:SubProgWPF.ViewModels.Learning"
+        xmlns:vmsCollections="clr-namespace:SubProgWPF.ViewModels.Collections"
+        xmlns:vmsTest="clr-namespace:SubProgWPF.ViewModels.Test"
         xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
         WindowStyle="None" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="720" Width="1080" AllowsTransparency="True" Background="Transparent"
-        Loaded="MainWindow_Loaded"
-        >
+        Title="MainWindow" Height="720" Width="1080" AllowsTransparency="True" Background="Transparent">
 
     <!--<Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </Window.Resources>-->
+    <!--<Window.Resources>
+        <SolidColorBrush x:Key="WindowBackground" 
+                        Color="White"
+                        />
+    </Window.Resources>-->
 
 
-    <Border Background="#eff2f7" CornerRadius="10" MouseDown="Border_MouseDown">
+    <Border Background="#38a152" MouseDown="Border_MouseDown">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="13*"/>
-            </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions >
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2.5*"/>
                 <ColumnDefinition Width="10*"/>
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="12*"/>
+            </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#020a12">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="7*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Column="1">
-                        
-                        <Button Style="{StaticResource topButton}" Margin="0 0 5 0" HorizontalAlignment="Left">
-                            <Icon:PackIconMaterial Kind="Bell"/>
-                        </Button>
-                        <Button Style="{StaticResource topButton}" Margin="0 0 0 0" HorizontalAlignment="Right">
-                            <Icon:PackIconMaterial Kind="Cog"/>
-                        </Button>
-                        <Separator Width="20" Height="50"  Margin="45 0 0 0" Foreground="#6e7783" Background="#6e7783">
-                            <Separator.LayoutTransform>
-                                <RotateTransform
-                                    Angle="0" />
-                            </Separator.LayoutTransform>
-                        </Separator>
-                    </StackPanel>
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 10 0">
-                        <Button Style="{StaticResource topButton}" Margin="0 0 10 0" HorizontalAlignment="Left">
-                            <Icon:PackIconMaterial Kind="Fullscreen"/>
-                        </Button>
-                        <Button Style="{StaticResource topButton}" Margin="0 0 0 0" HorizontalAlignment="Right">
-                            <Icon:PackIconMaterial Kind="Close"/>
-                        </Button>
-                        
-                    </StackPanel>
-                    
-                </Grid>
-               
-            </Border>
-            <viewsLeftPanel:LeftPanelView Grid.Column="0" Grid.Row="1" x:Name="menuDashBoard" DataContext="{Binding LeftPanelViewModel}"/>
+            <!--<Button Grid.Row="0" Grid.Column="1" Panel.ZIndex="999" HorizontalAlignment="Left">
+                <Icon:PackIconMaterial Kind="Cog" Width="30" Height="30" Opacity="1"/>
+            </Button>-->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" Panel.ZIndex="999">
 
-            <Border Grid.Column="1" Grid.Row="1" Visibility="Visible" Padding="30 20 20 20" Background="#071F36">
-                <!--<Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#0d0d54" Offset="0"/>
-                        <GradientStop Color="#111287" Offset="1.0"/>
-                    </LinearGradientBrush>
-                </Border.Background>-->
+                <Button Style="{StaticResource topButton}" Margin="0 0 5 0" HorizontalAlignment="Left">
+                    <Icon:PackIconMaterial Kind="Bell" Height="20" Width="20" Foreground="#444"/>
+                </Button>
+                <Button Style="{StaticResource topButton}" Margin="0 0 0 0" HorizontalAlignment="Right">
+                    <Icon:PackIconMaterial Kind="Cog"  Height="20" Width="20" Foreground="#444"/>
+                </Button>
+                <Separator Width="20" Height="50"  Margin="5 0 0 0" Foreground="#6e7783" Background="#6e7783">
+                    <Separator.LayoutTransform>
+                        <RotateTransform
+                                    Angle="90" />
+                    </Separator.LayoutTransform>
+                </Separator>
+                <Button Style="{StaticResource topButton}" Click="ExitApplication" Margin="0 0 15 0" HorizontalAlignment="Right">
+                    <Icon:PackIconMaterial Kind="Close"  Height="20" Width="20" Foreground="#444"/>
+                </Button>
+            </StackPanel>
+            <viewsLeftPanel:LeftPanelView Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" x:Name="menuDashBoard" DataContext="{Binding LeftPanelViewModel}"/>
+            <Border Grid.Column="1" Grid.Row="0" Background="#ecf0f1" Grid.RowSpan="2" Visibility="Visible">
                 <Grid>
                     <Grid.Resources>
-                        <DataTemplate DataType="{x:Type vms:TabLearnViewModel}">
+                        <DataTemplate DataType="{x:Type vmsLearning:TabLearnViewModel}">
                             <viewsLearn:tabLearn/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:TabDashViewModel}">
+                        <DataTemplate DataType="{x:Type vms:MenuDashViewModel}">
                             <viewsLeftPanel:TabDashBoardView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:TabTestViewModel}">
+                        <DataTemplate DataType="{x:Type vmsTest:TabTestViewModel}">
                             <viewsLeftPanel:TabTestView/>
                         </DataTemplate>
+                        <DataTemplate DataType="{x:Type vms:MenuTestDashViewModel}">
+                            <viewsLeftPanel:TabTestOverview/>
+                        </DataTemplate>
+                        
                         <DataTemplate DataType="{x:Type vms:DataGridNewWordsViewModel}">
                             <viewsLearn:tabListWordsView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:TabMediaViewModel}">
+                        <DataTemplate DataType="{x:Type vms:MenuMediaViewModel}">
                             <viewsLeftPanel:TabMediaView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:TabStorageViewModel}">
-                            <viewsLeftPanel:TabStorageView/>
+                        <DataTemplate DataType="{x:Type vms:MenuStorageMainViewModel}">
+                            <viewsLeftPanel:TabStorageMainView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vms:MenuCollectionsMainViewModel}">
+                            <viewsCollections:TabCollectionsMainView/>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type vms:MenuSettingsViewModel}">
+                            <viewsLeftPanel:TabSettingsView/>
                         </DataTemplate>
                     </Grid.Resources>
                     <!--<vlc:VlcControl x:Name="vlcPlayer"/>-->

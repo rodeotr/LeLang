@@ -1,7 +1,10 @@
-﻿using SubProgWPF.Commands;
+﻿using LangDataAccessLibrary.Models;
+using LangDataAccessLibrary.Services;
+using SubProgWPF.Commands;
 using SubProgWPF.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,49 +15,116 @@ namespace SubProgWPF.ViewModels
 {
     public class LeftPanelViewModel : ViewModelBase
     {
-        private readonly Visibility _active_tab;
         private readonly ICommand _leftPanelCommand;
         private readonly MainViewModel _mainViewModel;
-        private  Visibility _dashVisibility;
-        private  Visibility _addVisibility;
-        private  Visibility _testVisibility;
-
-        private readonly LeftPanelModel leftPanel;
+        private readonly MenuTestDashViewModel _tabTestDashViewModel;
+        private ObservableCollection<UserLanguage> _languages;
+        private UserInfo _userInfo;
+        private readonly LeftPanelModel _leftPanel;
+        private string _avatarPath;
+        private string _languageSymbolPath;
+        private string _testWordCount;
+        private bool _testVisibility;
+        
         
         public ICommand LeftPanelCommand => _leftPanelCommand;
 
-        public Visibility DashVisibility
-        {
-            get { return _dashVisibility; }
-            set { _dashVisibility = value; OnPropertyChanged(nameof(DashVisibility)); }
-        }
-        public Visibility AddVisibility
-        {
-            get { return _addVisibility; }
-            set { _addVisibility = value; OnPropertyChanged(nameof(AddVisibility)); }
-        }
-        public Visibility TestVisibility
-        {
-            get { return _testVisibility; }
-            set { _testVisibility = value; OnPropertyChanged(nameof(TestVisibility)); }
-        }
+        public string AvatarPath { get => _avatarPath; set { _avatarPath = value; OnPropertyChanged(nameof(AvatarPath)); } }
+        public string LanguageSymbolPath { get => _languageSymbolPath; set { _languageSymbolPath = value; OnPropertyChanged(nameof(LanguageSymbolPath)); } }
 
+        public bool TestVisibility { get => _testVisibility; set { _testVisibility = value; OnPropertyChanged(nameof(TestVisibility)); } }
+        public string TestWordCount { get => _testWordCount; set { _testWordCount = value; OnPropertyChanged(nameof(TestWordCount)); } }
+
+        public LeftPanelModel LeftPanel => _leftPanel;
+
+        public ObservableCollection<UserLanguage> Languages { get => _languages; set { _languages = value; OnPropertyChanged(nameof(Languages)); } }
+
+        public UserInfo UserInfo { get => _userInfo; set { _userInfo = value; OnPropertyChanged(nameof(UserInfo)); } }
 
         public LeftPanelViewModel(LeftPanelModel leftPanel, MainViewModel mainViewModel)
         {
+
             _mainViewModel = mainViewModel;
-            this.leftPanel = leftPanel;
+            _tabTestDashViewModel = (MenuTestDashViewModel)_mainViewModel.TabTestDashViewModel;
+            _testWordCount = _tabTestDashViewModel.Model.TotalWordsToBeTested.ToString();
+            TestVisibility = Int32.Parse(_testWordCount) > 0;
+            _leftPanel = leftPanel;
             _leftPanelCommand = new LeftPanelCommand(this);
-            _dashVisibility = Visibility.Visible;
-            _testVisibility = Visibility.Hidden;
-            _active_tab = _dashVisibility;
+
+            
+            updateTheFields();
 
         }
 
+        private void setUserInfo()
+        {
+            string _avatarprefix = "/Assets/Images/Avatars/";
+            User _user = SettingServices.getCurrentUser();
+            _userInfo = new UserInfo
+            {
+                Name = _user.Name,
+                AvatarSource = _user.Gender.Equals("M") ?
+                _avatarprefix + "Male/male1.png" :
+                _avatarprefix + "Female/female1.png"
+            };
+
+        }
+
+        private void setLanguages()
+        {
+            Language _currentLanguage = SettingServices.getCurrentLanguage();
+            _languages = new ObservableCollection<UserLanguage>();
+            string _imageSourcePrefix = "/Assets/Images/LanguageFlags/";
+            List<Language> _allLanguages = SettingServices.getCurrentUser().Languages;
+            foreach(Language l in _allLanguages)
+            {
+                double opacity = l.Name.Equals(_currentLanguage.Name) ? 1.0 : 0.5;
+                UserLanguage userLanguage = new UserLanguage()
+                {
+                    Name = l.Name,
+                    ImageSource = _imageSourcePrefix + l.LangCode.ToLower() + ".png",
+                    Opacity = opacity
+                };
+                _languages.Add(userLanguage);
+            }
+
+        }
 
         public void switchTab(string param)
         {
             _mainViewModel.switchTab(param);
         }
+
+        public override void updateTheFields()
+        {
+            setUserInfo();
+            setLanguages();
+
+            User user = SettingServices.getCurrentUser();
+            Language language = SettingServices.getCurrentLanguage();
+            string langCode = language.LangCode.ToLower();
+            bool isMale = user.Gender.Equals("M") ? true : false;
+            _languageSymbolPath = "/Assets/Images/LanguageFlags/" + langCode + ".png";
+            _avatarPath = "/Assets/Images/Avatars/";
+            _avatarPath += isMale ? "Male/male1.png" : "Female/female1.png";
+            LanguageSymbolPath = _languageSymbolPath;
+
+            TestVisibility = Int32.Parse(TestWordCount) > 0;
+
+            OnPropertyChanged(nameof(Languages));
+            OnPropertyChanged(nameof(UserInfo));
+        }
     }
+    public class UserLanguage
+    {
+        public string Name { get; set; }
+        public string ImageSource { get; set; }
+        public double Opacity { get; set; }
+    }
+    public class UserInfo
+    {
+        public string Name { get; set; }
+        public string AvatarSource { get; set; }
+    }
+    
 }

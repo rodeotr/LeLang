@@ -3,54 +3,201 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks" 
+             >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
-    <Grid>
+    <ScrollViewer VerticalScrollBarVisibility="auto">
+        <Grid  TextBlock.FontSize="20px" Width="700" TextBlock.Foreground="#000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="0.3*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Text="" FontSize="30px"/>
+            <Grid Grid.Row="1" Grid.Column="1" Height="40" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" FontSize="15" x:Name="TypeComboBox" HorizontalAlignment="Left"  Style="{DynamicResource ComboRound}" Width="120px" SelectedItem="{Binding MediaType}" ItemsSource="{Binding MediaTypes}"/>
+                <TextBlock Grid.Column="0" IsHitTestVisible="False" Text="Type" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=TypeComboBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <StackPanel Grid.Column="1" TextBlock.FontSize="15px" Orientation="Horizontal" Visibility="{Binding Path=TVVisibility, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Season" Margin="10 0 0 0" Padding="10"/>
+                    <TextBox Style="{DynamicResource TextBoxStyleLearning}" Width="30px" Height="30px" Text="{Binding SeasonIndex}" FontSize="20px" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <TextBlock Text="Episode" Margin="10 0 0 0" Padding="10"/>
+                    <TextBox Style="{DynamicResource TextBoxStyleLearning}" Width="30px" Height="30px" Text="{Binding EpisodeIndex}" FontSize="20px" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="2" Grid.Column="1" Height="40" Margin="0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.4*"/>
+                </Grid.ColumnDefinitions>
+                <!--<ComboBox x:Name="TitleComboBox" Style="{DynamicResource ComboRound}" FontSize="14px" Width="250px" HorizontalAlignment="Left" VerticalContentAlignment="Center" IsEditable="True" Text="dddddd"  ItemsSource="{Binding ExistingSeriesNames}" Foreground="Black"/>-->
+                <ComboBox Grid.Column="0" x:Name="TitleComboBox" Style="{DynamicResource ComboRound}" FontSize="14px" Width="250px" HorizontalAlignment="Left" VerticalContentAlignment="Center" IsEditable="True" Text="{Binding SelectedMediaName}"  ItemsSource="{Binding ExistingMediaNames}"/>
+                <TextBlock Grid.Column="0" IsHitTestVisible="False" Text="Title" Margin="10,0,0,0" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=TitleComboBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding Path=BookVisibility, Converter={StaticResource BoolToVis}}">
+                    <TextBlock  Text="Page Count Per Section" Margin="10 0 0 0" Padding="10"/>
+                    <TextBox Style="{DynamicResource TextBoxStyleLearning}" Width="30px" Height="30px" Text="{Binding PPS}" FontSize="20px" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Margin="0 70 50 40 " Text="" FontSize="30px" Foreground="#fff"/>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <TextBlock Text="Type" Foreground="#fff" Padding="10" FontSize="20px"/>
-            <ComboBox Width="120px" Height="30px" Margin="53 0 0 0" Text="{Binding MediaType}" ItemsSource="{Binding MediaTypes}"/>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding Path=TVVisibility, Converter={StaticResource BoolToVis}}">
-                <TextBlock Text="Season" Foreground="#fff" Margin="10 0 0 0" FontSize="15px" Padding="10"/>
-                <TextBox Width="30px" Height="30px" Text="{Binding SeasonIndex}" FontSize="20px" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-                <TextBlock Text="Episode" Foreground="#fff" Margin="10 0 0 0" FontSize="15px" Padding="10"/>
-                <TextBox Width="30px" Height="30px" Text="{Binding EpisodeIndex}" FontSize="20px" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="3" Grid.Column="1" Height="40" Margin="0 10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="198*"/>
+                    <ColumnDefinition Width="0*"/>
+                    <ColumnDefinition Width="247*"/>
+                    <ColumnDefinition Width="222*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SubtitleLocationTextBox" Grid.Column="0" Style="{DynamicResource SignUpTextBoxStyle}" Text="{Binding TranscriptionLocation}" FontSize="18px" Padding="10 0"  Width="400" VerticalContentAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="3"/>
+                <TextBlock Grid.Column="0" IsHitTestVisible="False" Text="Subtitle Location" Margin="10,0,0,0" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=SubtitleLocationTextBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <Border Grid.Column="2" Height="40" Width="100" Cursor="Hand" MouseDown="btnOpenFile_Click" Margin="226,0,0,0" CornerRadius="20" HorizontalAlignment="Left" Grid.ColumnSpan="2">
+                    <!--<Border.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding TabTestCommand}" CommandParameter="YES"/>
+                </Border.InputBindings>-->
+                    <Border.Style>
+                        <Style>
+                            <Setter Property="Border.Background" Value="#2b4bf6"/>
+                            <Setter Property="Border.RenderTransformOrigin" Value="0.5, 0.5"/>
+                            <Style.Triggers>
+                                <Trigger Property="Border.IsMouseOver" Value="True">
+                                    <Setter Property="Border.RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Border.Background" Value="#121f61"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Grid Width="100">
+                        <Border Margin="0 0 0 0" Background="#1e3ee1" Width="40" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="20">
+                            <Border.Effect>
+                                <DropShadowEffect Direction="220" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <Icon:PackIconMaterial Kind="Upload" Width="20" Height="20" Margin="0 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
+                            <!--<Icon:PackIconMaterial Kind="DesktopMac" Width="50" Height="50" Margin="0 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="ForestGreen"/>-->
+                        </Border>
+                        <TextBlock Text="Open" Margin="40 0 0 0"  FontSize="17" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
+                    </Grid>
+                </Border>
+                <!--<Button Style="{DynamicResource ButtonStyleLearning}" Name="btnOpenFile" HorizontalAlignment="Right" FontSize="15px" Content="Open" Height="30px" Width="60px"  Margin="-20 0" Click="btnOpenFile_Click"/>-->
+
+            </Grid>
+            <Grid Grid.Row="4" Grid.Column="1" Margin="0 10" Visibility="{Binding Path=YoutubeVisibility, Converter={StaticResource BoolToVis}}">
+                <TextBox x:Name="LinkTextBox" Text="{Binding Path=Link, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Padding="10 0" FontSize="17" Height="40" Style="{DynamicResource SignUpTextBoxStyle}"  Width="450px" />
+                <TextBlock IsHitTestVisible="False" Text="Link"  Margin="10,0,0,0" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, ElementName=LinkTextBox}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+
+            <StackPanel  Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Text="Max Word Frequency" Padding="0 15" FontSize="15px" Margin="10 10 10 10" Height="50px" FontFamily="Verdana" FontWeight="Normal"/>
+                <TextBox Style="{DynamicResource TextBoxStyleLearning}" Name="TextMaxFreq" Text="{Binding Path=MaxWordFreq, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="PreviewTextInputMaxFreq"  Width="30px" Height="30px" FontSize="20px" TextAlignment="Center" />
             </StackPanel>
 
-        </StackPanel>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" >
-            <TextBlock  Text="Name" Padding="10" Foreground="#fff" HorizontalAlignment="Left" Height="50px" FontSize="20px"/>
-            <ComboBox FontSize="18px" Width="250px" Height="30px" Margin="41 10" VerticalContentAlignment="Center" IsEditable="True" Text="{Binding SelectedMediaName}" ItemsSource="{Binding ExistingSeriesNames}"/>
-            <!--<TextBox Name="txtEditorName" Text="{Binding MediaName}" FontSize="20px"   Width="250" Height="40px" Margin="41 10" VerticalContentAlignment="Center"/>-->
-        </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" >
-            <TextBlock  Text="Location" Padding="10" Foreground="#fff" HorizontalAlignment="Left" Height="50px" FontSize="20px"/>
-            <TextBox Name="txtEditorLocation"  Text="{Binding TranscriptionLocation}" FontSize="18px"  Width="400" Height="30px" Margin="20 10" VerticalContentAlignment="Center"/>
-            <Button Name="btnOpenFile" Content="Open" Height="30px" Width="60px" Margin="3" Click="btnOpenFile_Click"/>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="4">
-            <TextBlock Text="Max Word Frequency" Foreground="#fff" Padding="0 15" FontSize="15px" Margin="10 10 10 10" Height="50px"/>
-            <TextBox Name="TextMaxFreq" Text="{Binding MaxWordFreq}" PreviewTextInput="PreviewTextInputMaxFreq"  Width="30px" Height="30px" FontSize="20px" TextAlignment="Center" />
-        </StackPanel>
-        <Grid Grid.Row="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Button Name="btnExecuteAdd" Content="Execute" Command="{Binding TabAddCommand}" Grid.Column="2" Margin="0 50 130 0" VerticalAlignment="Top" HorizontalAlignment="Right" Height="80" Width="140" FontSize="30"/>
+            <!--<TextBox Grid.Row="6" HorizontalAlignment="Left" FontSize="13" Visibility="{Binding Path=YoutubeVisibility, Converter={StaticResource BoolToVis}, FallbackValue=Collapsed}" Grid.ColumnSpan="2" Width="500" Height="300"/>-->
+            <Grid Grid.Row="7" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="2" Cursor="Hand" Height="50" Width="120" Margin="10 0" CornerRadius="25" HorizontalAlignment="Right">
+                    <Border.InputBindings>
+                        <MouseBinding Gesture="LeftClick" Command="{Binding TabAddCommand}"/>
+                    </Border.InputBindings>
+                    <Border.Style>
+                        <Style>
+                            <Setter Property="Border.Background" Value="#2db521"/>
+                            <Setter Property="Border.RenderTransformOrigin" Value="0.5, 0.5"/>
+                            <Style.Triggers>
+
+                                <Trigger Property="Border.IsMouseOver" Value="True">
+                                    <Setter Property="Border.RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Border.Background" Value="#024f14"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Grid Width="120">
+                        <Border Margin="0 0 0 0" Background="#1c7514" Width="50" Height="50" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="25">
+                            <Border.Effect>
+                                <DropShadowEffect Direction="220" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <Icon:PackIconMaterial Kind="Run" Width="25" Height="25" Margin="0 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
+                            <!--<Icon:PackIconMaterial Kind="DesktopMac" Width="50" Height="50" Margin="0 0 0 0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="ForestGreen"/>-->
+                        </Border>
+                        <TextBlock Text="{DynamicResource Learn_AddMedia_ButtonRun}" Margin="40 0 0 0"  FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#fff"/>
+                    </Grid>
+                </Border>
+
+                <!--<Button Style="{DynamicResource ButtonStyleLearning}" Name="btnExecuteAdd" Content="Execute" Command="{Binding TabAddCommand}" Grid.Column="2"  VerticalAlignment="Top" HorizontalAlignment="Right" Height="50" Width="110" FontSize="20"/>-->
+            </Grid>
         </Grid>
-    </Grid>
+    </ScrollViewer>
+    
+    
 </UserControl>

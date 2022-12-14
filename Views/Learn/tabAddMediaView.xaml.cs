@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using SubProgWPF.ViewModels;
+using SubProgWPF.ViewModels.Learning;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -29,11 +30,21 @@ namespace SubProgWPF.Views.Learn
 
         private void btnOpenFile_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
-                ((TabAddMediaViewModel)(this.DataContext)).TranscriptionLocation = openFileDialog.FileName;
+            if(((MouseButtonEventArgs)e).ClickCount == 1)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                    //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
+                    ((TabAddMediaViewModel)(this.DataContext)).TranscriptionLocation = openFileDialog.FileName;
+                e.Handled = true;
+            }
+            
         }
+        //private void Click_Run(object sender, RoutedEventArgs e)
+        //{
+        //    Console.WriteLine(LinkTextBox.Text);
+
+        //}
         private void PreviewTextInputMaxFreq(object sender, TextCompositionEventArgs e)
         {
             //Console.WriteLine(e.Text);

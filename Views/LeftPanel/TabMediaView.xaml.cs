@@ -31,8 +31,8 @@ namespace SubProgWPF.Views.LeftPanel
             { 
                 //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
                 string myValue = ((Button)sender).Tag.ToString();
-                ((TabMediaViewModel)(this.DataContext)).SelectedIndex = myValue;
-                ((TabMediaViewModel)(this.DataContext)).MediaLocation = openFileDialog.FileName;
+                ((MenuMediaViewModel)(this.DataContext)).SelectedIndex = myValue;
+                ((MenuMediaViewModel)(this.DataContext)).MediaLocation = openFileDialog.FileName;
             }
         }
     }

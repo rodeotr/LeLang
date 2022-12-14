@@ -17,8 +17,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Images\Avatars\Female\female1.png" />
+    <None Remove="Assets\Images\Avatars\Male\male1.png" />
+    <None Remove="Assets\Images\book1.png" />
+    <None Remove="Assets\Images\collection.png" />
+    <None Remove="Assets\Images\despacito.jpg" />
+    <None Remove="Assets\Images\exam.jpg" />
+    <None Remove="Assets\Images\got.jpg" />
+    <None Remove="Assets\Images\harry.jpg" />
+    <None Remove="Assets\Images\LanguageFlags\ar.png" />
+    <None Remove="Assets\Images\LanguageFlags\bn.png" />
+    <None Remove="Assets\Images\LanguageFlags\cn.png" />
+    <None Remove="Assets\Images\LanguageFlags\de.png" />
+    <None Remove="Assets\Images\LanguageFlags\en.png" />
+    <None Remove="Assets\Images\LanguageFlags\es.png" />
+    <None Remove="Assets\Images\LanguageFlags\fr.png" />
+    <None Remove="Assets\Images\LanguageFlags\in.png" />
+    <None Remove="Assets\Images\LanguageFlags\it.png" />
+    <None Remove="Assets\Images\LanguageFlags\ja.png" />
+    <None Remove="Assets\Images\LanguageFlags\ko.png" />
+    <None Remove="Assets\Images\LanguageFlags\pt.png" />
+    <None Remove="Assets\Images\LanguageFlags\ru.png" />
+    <None Remove="Assets\Images\LanguageFlags\tr.png" />
+    <None Remove="Assets\Images\success.jpg" />
+    <None Remove="Assets\Sounds\Effects\click.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FFMpegCore" Version="3.1.0" />
-    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="Guna.UI2.WinForms" Version="2.0.1.9" />
+    <PackageReference Include="LoadingSpinner.WPF" Version="1.0.0" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.27" />
@@ -29,11 +57,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.27" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.27" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="161.47021.0" />
     <PackageReference Include="Microsoft.WindowsAPICodePack.Shell" Version="1.1.0" />
     <PackageReference Include="PdfPig" Version="0.1.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
     <PackageReference Include="Vlc.DotNet.Wpf" Version="3.1.0" />
+    <PackageReference Include="WebSocketSharpFork" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,25 +71,213 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="XamlRadialProgressBar">
+      <HintPath>..\..\..\Desktop\XamlRadialProgressBar_v1.0.3\XamlRadialProgressBar.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Windows\AddLanguageWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\AddToCollectionWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Learn\AddMedia\Text.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Learn\AddMedia\Book.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Learn\AddMedia\Youtube.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Learn\AddMedia\TVSeries.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Learn\tabAddMediaAltView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Collections\TabCollectionsBrowseView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Collections\TabCollectionsItemView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Collections\TabCollectionsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\Collections\CreateCollectionWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Learn\tabExpressionsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Learn\tabAddWordView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Collections\TabCollectionsMainView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LeftPanel\TabSettingsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\LeftPanel\TabStorageView - Copy.xaml.cs">
       <SubType>Code</SubType>
       <DependentUpon>TabStorageVieww.xaml.cs</DependentUpon>
     </Compile>
-    <Compile Update="Views\LeftPanel\TabStorageView.xaml.cs">
+    <Compile Update="Views\LeftPanel\TabStorageExpressionsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LeftPanel\TabStorageWordsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LeftPanel\TabTestOverview.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LeftPanel\TabStorageMainView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\Collections\EditCollectionWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\ShowCollectionContextsWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\LeftPanel\TabStorageView.xaml">
+    <Page Update="Windows\AddLanguageWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\AddToCollectionWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="ResourceDictionary\LangTurkish.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\AddMedia\Text.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\AddMedia\Book.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\AddMedia\Youtube.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\AddMedia\TVSeries.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\tabAddMediaAltView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Collections\TabCollectionsBrowseView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Collections\TabCollectionsItemView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Collections\TabCollectionsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\Collections\CreateCollectionWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\tabExpressionsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Learn\tabAddWordView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Collections\TabCollectionsMainView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LeftPanel\TabSettingsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LeftPanel\TabStorageExpressionsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LeftPanel\TabStorageWordsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LeftPanel\TabTestOverview.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LeftPanel\TabStorageMainView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\Collections\EditCollectionWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\ShowCollectionContextsWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\MenuTabs\" />
-    <Folder Include="ViewModels\Learning\" />
+    <Resource Include="Assets\Images\Avatars\Female\female1.png" />
+    <Resource Include="Assets\Images\Avatars\Male\male1.png" />
+    <Resource Include="Assets\Images\book1.png" />
+    <Resource Include="Assets\Images\collection.png" />
+    <Resource Include="Assets\Images\despacito.jpg" />
+    <Resource Include="Assets\Images\exam.jpg" />
+    <Resource Include="Assets\Images\got.jpg" />
+    <Resource Include="Assets\Images\harry.jpg" />
+    <Resource Include="Assets\Images\LanguageFlags\ar.png" />
+    <Resource Include="Assets\Images\LanguageFlags\bn.png" />
+    <Resource Include="Assets\Images\LanguageFlags\cn.png" />
+    <Resource Include="Assets\Images\LanguageFlags\de.png" />
+    <Resource Include="Assets\Images\LanguageFlags\en.png" />
+    <Resource Include="Assets\Images\LanguageFlags\es.png" />
+    <Resource Include="Assets\Images\LanguageFlags\fr.png" />
+    <Resource Include="Assets\Images\LanguageFlags\in.png" />
+    <Resource Include="Assets\Images\LanguageFlags\it.png" />
+    <Resource Include="Assets\Images\LanguageFlags\ja.png" />
+    <Resource Include="Assets\Images\LanguageFlags\ko.png" />
+    <Resource Include="Assets\Images\LanguageFlags\pt.png" />
+    <Resource Include="Assets\Images\LanguageFlags\ru.png" />
+    <Resource Include="Assets\Images\LanguageFlags\tr.png" />
+    <Resource Include="Assets\Images\success.jpg" />
+    <Resource Include="Assets\Sounds\Effects\click.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Collections\" />
   </ItemGroup>
 
 </Project>

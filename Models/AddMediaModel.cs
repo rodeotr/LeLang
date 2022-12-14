@@ -9,10 +9,12 @@ namespace SubProgWPF.Models
     {
         public MediaTypes.TYPE Type;
         public string TypeStr;
-        public string MediaName;
+        public string MediaName { get; set; } = "";
         public string EpisodeIndex;
         public string SeasonIndex;
+        public string Link;
         public string TranscriptionLocation;
-        public string MaxWordFrequency = "1";
+        public string MaxWordFrequency = "2";
     }
+    
 }

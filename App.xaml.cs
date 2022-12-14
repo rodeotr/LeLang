@@ -18,98 +18,71 @@ using System.Runtime.InteropServices;
 using System.Windows.Input;
 using System.ComponentModel;
 using LangDataAccessLibrary.Services;
+using SubProgWPF.Windows;
+using WebSocketSharp;
+using System.Net.Http;
+using System.Net;
+using System.Text;
+using System.Threading;
+using SubProgWPF.Models;
 
 namespace SubProgWPF
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// App Launch Logic
     /// </summary>
     public partial class App : Application
     {
-        public readonly NavigationStore _navigationStore;
-        Vlc.DotNet.Core.VlcMediaPlayer mediaPlayer;
-        BackgroundWorker worker;
+        private readonly NavigationStore _navigationStore;
 
         public App()
         {
-            //IServiceCollection services = new ServiceCollection();
-            //services.AddSingleton<NavigationStore>();
             _navigationStore = new NavigationStore();
-            worker = new BackgroundWorker();
-            worker.DoWork += worker_DoWork;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            worker.WorkerReportsProgress = false;
-            worker.RunWorkerAsync();
-
-        }
-
-        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Console.WriteLine("");
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            //mediaPlayer = new Vlc.DotNet.Core.VlcMediaPlayer(new DirectoryInfo(@"C:\\Program Files (x86)\\VideoLAN\\VLC"));
-            mediaPlayer = null;
+            
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-
-
-
-            //using (WordContextDB dbContext = wordDbContextFactory.CreateDbContext())
-            //{
-            //    dbContext.Database.Migrate();
-            //}
-
-
-            //string path = "C:\\Users\\Dean\\Desktop\\PDF\\Bhagavad Gita.pdf";
-            //LangUtils.GetAllWordObjectsFromPDF(path, 1, 10, 3);
-
-
-
-
-
-            //Vlc.DotNet.Core.VlcMediaPlayer mediaPlayer = null;
-
-            bool IsPlaying = false;
-            // time in seconds
-
-            //mediaPlayer.SetMedia(new Uri("C:\\Users\\Dean\\Desktop\\The.Big.Bang.Theory.S03.Season.3.Complete.720p.HDTV.x264-[maximersk]\\The.Big.Bang.Theory.S06E02.720p.HDTV.X264-MRSK.mkv"), new string[] { ":no-audio", ":start-time=7" });
-            //mediaPlayer.Play();
-            //IsPlaying = true;
-
-
-
-
-
-
-
-
-
-            //MediaServices.getTotalLearnedWordsOfAnEpisode(1);
-
-            _navigationStore.CurrentViewModel = CreateDashBoardViewModel();
-            MainWindow window = new MainWindow(){ DataContext = new MainViewModel(_navigationStore, mediaPlayer, IsPlaying)};
-            window.Show();
-
+            bool isAppRunningFirstTime = AppServices.isAppRunningFirstTime();
+            if (isAppRunningFirstTime)
+            {
+                firstTimeRunningSequence();
+            }
+            else
+            {
+                launchMainWindow();
+            }
             base.OnStartup(e);
         }
 
-      
-
-        
-
-
-
-
-        private ViewModelBase CreateDashBoardViewModel()
+        public void launchMainWindow()
         {
-            return new TabDashViewModel(_navigationStore);
+            SetLanguageDictionary();
+            MainWindow window = new MainWindow() { DataContext = new MainViewModel(_navigationStore) };
+            window.Show();
         }
 
-        
+        private void firstTimeRunningSequence()
+        {
+            AppServices.initializeLanguages();
+            FirstTimeSignUpWindow firstTimeSignUp = new FirstTimeSignUpWindow(this);
+            firstTimeSignUp.Show();
+            
+
+        }
+        private void SetLanguageDictionary()
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            switch (Thread.CurrentThread.CurrentCulture.ToString())
+            {
+                case "en-US":
+                    dict.Source = new Uri("..\\ResourceDictionary\\LangEnglish.xaml", UriKind.Relative);
+                    break;
+            }
+            
+            this.Resources.MergedDictionaries.Add(dict);
+        }
+
+
     }
 }

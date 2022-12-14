@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,13 +15,24 @@ using System.Windows.Shapes;
 namespace SubProgWPF.Views.Learn
 {
     /// <summary>
-    /// Interaction logic for tabAddWordView.xaml
+    /// Interaction logic for tabContinueMediaView.xaml
     /// </summary>
     public partial class tabAddWordView : UserControl
     {
+        //private Regex _regex;
         public tabAddWordView()
         {
             InitializeComponent();
         }
+        //private void PreviewTextInputMaxFreq(object sender, TextCompositionEventArgs e)
+        //{
+        //    //Console.WriteLine(e.Text);
+        //    e.Handled = !IsTextAllowed(e.Text);
+        //}
+        //private bool IsTextAllowed(string text)
+        //{
+        //    _regex = new Regex("[^0-9.-]+");
+        //    return !_regex.IsMatch(text);
+        //}
     }
 }

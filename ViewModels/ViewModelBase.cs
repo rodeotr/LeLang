@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SubProgWPF.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -14,5 +14,7 @@ namespace SubProgWPF.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public abstract void updateTheFields();
+        
     }
 }

@@ -6,99 +6,80 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using LangDataAccessLibrary.Services;
+using SubProgWPF.ViewModels.Learning;
+using System.Linq;
 
 namespace SubProgWPF.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        public Vlc.DotNet.Core.VlcMediaPlayer MediaPlayer;
-
         private readonly NavigationStore _navigationStore;
-        private  ViewModelBase _tabDashViewModel;
-        private  ViewModelBase _tabMediaViewModel;
-        private ViewModelBase _tabLearnViewModel;
-        private ViewModelBase _tabTestViewModel;
-        private ViewModelBase _storageViewModel;
-        private ViewModelBase _listNewWordsGridViewModel;
-        bool IsMediaPlayerPlaying;
-
-
+        private List<LeftMenuItemModel> _leftMenuItems;
+        private ViewModelBase _tabTestDashViewModel;
 
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
-
-
-        public ViewModelBase LeftPanelViewModel { get; }
-        public ViewModelBase TabLearnViewModel { get; }
-
-
-
-
-        private void OnCurrentViewModelChanged()
-        {
-            OnPropertyChanged(nameof(CurrentViewModel));
-        }
+        public ViewModelBase LeftPanelViewModel { get; set; }
+        public ViewModelBase TabTestDashViewModel { get => _tabTestDashViewModel; }
 
         
-        public MainViewModel(NavigationStore navigationStore, Vlc.DotNet.Core.VlcMediaPlayer _mediaPlayer, bool isPlaying)
+
+        
+        public MainViewModel(NavigationStore appNavigationStore)
         {
-            //_mediaPlayer.Stop();
-            _navigationStore = navigationStore;
+            _navigationStore = appNavigationStore;
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
-            IsMediaPlayerPlaying = isPlaying;
-            MediaPlayer = _mediaPlayer;
-            createTabViewModels(_mediaPlayer);
 
-            LeftPanelViewModel = new LeftPanelViewModel(new LeftPanelModel(
-                "GlobeModel",
-                new List<LeftMenuItemModel>()), this);
-            TabLearnViewModel = new TabLearnViewModel();
-
-            //_tabDashBoardVisibility = Visibility.Visible;
-            //_tabTestVisibility = Visibility.Hidden;
-            //_tabAddVisibility = Visibility.Hidden;
+            createLeftPanel();
         }
 
-        private void createTabViewModels(Vlc.DotNet.Core.VlcMediaPlayer _mediaPlayer)
+        private void createLeftPanel()
         {
-            _tabDashViewModel = CurrentViewModel;
-            _tabLearnViewModel = new TabLearnViewModel();
-            _tabTestViewModel = new TabTestViewModel(_mediaPlayer);
-            _storageViewModel = new TabStorageViewModel(new StorageMemberModel(WordServices.getAllWords()));
-            _tabMediaViewModel = new TabMediaViewModel(_navigationStore);
+            createLeftPanelItems();
+
+            _navigationStore.CurrentViewModel = _leftMenuItems.FirstOrDefault(a => a.ItemName.Equals("DashBoard")).VM;
+            _tabTestDashViewModel = _leftMenuItems.FirstOrDefault(a => a.ItemName.Equals("Test")).VM;
+            LeftPanelViewModel = new LeftPanelViewModel(new LeftPanelModel(_leftMenuItems), this);
+        }
+
+        private void createLeftPanelItems()
+        {
+            _leftMenuItems = new List<LeftMenuItemModel>();
+            _leftMenuItems.Add(new LeftMenuItemModel("HomeVariant","DashBoard", new MenuDashViewModel()));
+            _leftMenuItems.Add(new LeftMenuItemModel("DatabasePlus", "Learn", new TabLearnViewModel(this)));
+            _leftMenuItems.Add(new LeftMenuItemModel("Flask", "Test", new MenuTestDashViewModel(_navigationStore)));
+            _leftMenuItems.Add(new LeftMenuItemModel("Book", "Media", new MenuMediaViewModel(_navigationStore)));
+            _leftMenuItems.Add(new LeftMenuItemModel("Archive", "Storage", new MenuStorageMainViewModel()));
+            _leftMenuItems.Add(new LeftMenuItemModel("Rhombus", "Collections", new MenuCollectionsMainViewModel()));
+            _leftMenuItems.Add(new LeftMenuItemModel("Earth", "Browse", null));
+            _leftMenuItems.Add(new LeftMenuItemModel("Help", "FAQ", null));
+            _leftMenuItems.Add(new LeftMenuItemModel("Cog", "Settings", new MenuSettingsViewModel(this)));
+            
+            
         }
 
         public void switchTab(string param)
         {
-            //TabDashBoardVisibility = Visibility.Hidden;
-            //TabAddVisibility = Visibility.Hidden;
-            //TabTestVisibility = Visibility.Hidden;
-            switch (param)
-            {
-                case "learnButton":
-                    _navigationStore.CurrentViewModel = _tabLearnViewModel;
-                    break;
-                case "dashButton":
-                    _navigationStore.CurrentViewModel = _tabDashViewModel;
-                    break;
-                case "testButton":
-                    _navigationStore.CurrentViewModel = _tabTestViewModel;
-                    break;
-                case "mediaButton":
-                    _navigationStore.CurrentViewModel = _tabMediaViewModel;
-                    break;
-                case "ListNewWords":
-                    _navigationStore.CurrentViewModel = _listNewWordsGridViewModel;
-                    break;
-                case "storageButton":
-                    _navigationStore.CurrentViewModel = _storageViewModel;
-                    break;
-            }
+            _navigationStore.CurrentViewModel = _leftMenuItems.FirstOrDefault(a => a.ItemName.Equals(param.ToString())).VM;
         }
-        public void launchDataGrid(DataGridNewWordModel dataGridNewWordModel)
-        {
 
-            _listNewWordsGridViewModel = new DataGridNewWordsViewModel(dataGridNewWordModel);
-            _navigationStore.CurrentViewModel = _listNewWordsGridViewModel;
+        public override void updateTheFields()
+        {
+            foreach(LeftMenuItemModel model in _leftMenuItems)
+            {
+                if (model.ItemName.Equals("Ranking"))
+                {
+                    continue;
+                }
+                model.VM.updateTheFields();
+            }
+            ((LeftPanelViewModel)LeftPanelViewModel).updateTheFields();
+            ((LeftPanelViewModel)LeftPanelViewModel).TestWordCount = ((MenuTestDashViewModel)_tabTestDashViewModel).Model.TotalWordsToBeTested.ToString();
+            
+        }
+
+        private void OnCurrentViewModelChanged()
+        {
+            OnPropertyChanged(nameof(CurrentViewModel));
         }
     }
 }

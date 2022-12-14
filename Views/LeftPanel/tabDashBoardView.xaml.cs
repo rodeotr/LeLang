@@ -22,5 +22,6 @@ namespace SubProgWPF.Views.LeftPanel
         {
             InitializeComponent();
         }
+        
     }
 }

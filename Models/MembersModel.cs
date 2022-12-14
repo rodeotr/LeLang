@@ -1,10 +1,12 @@
-﻿using LangDataAccessLibrary.Models;
+﻿using LangDataAccessLibrary;
+using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
@@ -12,36 +14,170 @@ namespace SubProgWPF.Models
 {
     public class MembersModel
     {
-
-        private int PPI = 50;   // Per Page Item
-        ObservableCollection<MemberNewWord> members;
-        ObservableCollection<MemberNewWord> members_copy;
-        ObservableCollection<MemberNewWord> removedMembers;
-        private List<int> removed_indexes;
-        List<TempWord> copyWordList;
-        private int current_page = 1;
-        BackgroundWorker worker;
-
-        public int Current_page { get => current_page; set => current_page = value; }
+        private int _currentPage = 1;
+        private int _PPI = 50;   // Per Page Item
+        private bool _lastPage = false;
+        private ObservableCollection<MemberNewWord> _currentMembers;
+        private ObservableCollection<MemberNewWord> _allMembers;
+        private ObservableCollection<MemberNewWord> _removedMembers;
+        private readonly List<TempWord> _tempWordList;
+        private readonly BackgroundWorker _worker;
 
         public MembersModel(List<TempWord> words)
         {
-            copyWordList = words;
-            removed_indexes = new List<int>();
+            _worker = new BackgroundWorker();
+            _tempWordList = words;
             
-            populateAllMembers(words);
+            populateAllMembers();
             updateCurrentMembers();
+
+            
         }
 
-        //public void createDataMembers(List<Word> words)
-        //{
+        public void populateAllMembers()
+        {
+            _allMembers = new ObservableCollection<MemberNewWord>();
+            //List<Word> knownWords = WordServices.getAllWords();
 
-        //    List<Word> wordList = new List<Word>(words);
-        //    copyWordList = new List<Word>(words);
-        //    wordList = Splice(wordList, (Current_page - 1) * PPI, PPI);
-        //    updateCurrentMembers();
-        //    //addMembersToGrid(wordList);
-        //}
+            var converter = new BrushConverter();
+            int counter = 1;
+            foreach (TempWord w in _tempWordList)
+            {
+                ObservableCollection<StorageContext> contexts;
+               
+                //Word word = knownWords.FirstOrDefault(a => a.Name.Equals(w.Name));
+                //if (word != null)
+                //{
+                //    WordServices.addContextArrayToWord(word.Id, w.WordContext_Ids);
+                //    TempServices.deleteTempWordFromDB(w);
+                //    continue;
+                //}
+
+                string randColor = getRandomColor();
+                //string context = getContextString(w);
+                contexts = getContextCollection(w);
+                string time = getPlayHeadTimeString(w);
+
+                MemberNewWord m = new MemberNewWord { 
+                    Number = counter.ToString(),
+                    WordDBId = w.Id,
+                    WordObj = w,
+                    Character = w.Name.Substring(0, 1),
+                    BGColor = (Brush)converter.ConvertFromString(randColor),
+                    Name = w.Name,
+                    Position = time,
+                    Contexts = contexts };
+                _allMembers.Add(m);
+
+                counter += 1;
+            }
+            //removeExistingWords();
+        }
+
+        private ObservableCollection<StorageContext> getContextCollection(TempWord w)
+        {
+            ObservableCollection<StorageContext> list = new ObservableCollection<StorageContext>();
+            string[] contextArray = w.WordContext_Ids.Split(",");
+            if (contextArray[0].Length > 0)
+            {
+                for (int i = 0; i < contextArray.Length; i++)
+                {
+                    WordContext a = WordServices.getWordContextByID(Int32.Parse(contextArray[i]));
+
+                    StorageContext sC = new StorageContext()
+                    {
+                        Word = w.Name,
+                        IconKind = a.Type == MediaTypes.TYPE.TVSeries ? "DesktopMac" :
+                        a.Type == MediaTypes.TYPE.Book ? "Book" :
+                        a.Type == MediaTypes.TYPE.Youtube ? "Youtube" : "Close",
+                        Time = a.Address.SubLocation,
+                        Context = a.Content,
+                        Medium = a.Type.ToString(),
+                        Number = i.ToString()
+                    };
+                    list.Add(sC);
+                    if(a.Type == MediaTypes.TYPE.Youtube)
+                    {
+                        sC.Time = a.Address.SubLocation;
+                        sC.MediaLocation = TranscriptionServices.getTranscriptionByID(a.Address.TranscriptionAddress_Id).MediaLocation;
+                    }
+                }
+                return list;
+            }
+            return null;
+
+        }
+        private string getRandomColor()
+        {
+            Random rnd = new Random();
+
+            string[] colors = new string[10] {"#32a852","#316e78", "#7919c2", "#a86c05", "#e02f1b",
+                                                "#3d0a04","#0d8aff","#e300d0","#ab495b","#5ec936"};
+            return colors[rnd.Next(colors.Length)];
+        }
+        public void updateGrid(string command)
+        {
+            switch (command)
+            {
+                case "next":
+                    if (!_lastPage)
+                    {
+                        Current_page += 1;
+                    }
+                    break;
+                case "prev":
+                    if(Current_page != 1)
+                    {
+                        Current_page -= 1;
+                    }
+                    _lastPage = false;
+                    break;
+
+            }
+            if ((Current_page) * _PPI > _allMembers.Count)
+            {
+                _lastPage = true;
+            }
+            if((_lastPage && command.Equals("next")) || (Current_page <= 0 && command.Equals("prev")))
+            {
+                return;
+            }
+            
+          
+            updateCurrentMembers();
+        }
+        public void updateCurrentMembers()
+        {
+            List<MemberNewWord> members_ = new List<MemberNewWord>(AllMembers);
+            members_ = Splice(members_, (Current_page - 1) * _PPI, _PPI);
+            _currentMembers = new ObservableCollection<MemberNewWord>(members_);
+        }
+        private string getPlayHeadTimeString(TempWord w)
+        {
+            string s = "";
+            string[] contextArray = w.WordContext_Ids.Split(",");
+            if(contextArray[0].Length > 0)
+            {
+                for (int i = 0; i < contextArray.Length; i++)
+                {
+                    WordContext wC = WordServices.getWordContextByID(Int32.Parse(contextArray[i]));
+                    s = string.Concat(s, wC.Address.SubLocation);
+                    s = string.Concat(s, "\n");
+                }
+            }
+            return s;
+        }
+        private string getContextString(TempWord w)
+        {
+            string s = "";
+            List<WordContext> wContexts = WordServices.getWordContextsFromTempWord(w);
+            for (int i = 0; i < wContexts.Count; i++)
+            {
+                WordContext wC = wContexts[i];
+                s = string.Concat(s, wC.Content);
+            }
+            return s;
+        }
         public List<T> Splice<T>(List<T> source, int index, int count)
         {
             if (index + count > source.Count)
@@ -52,197 +188,65 @@ namespace SubProgWPF.Models
             source.RemoveRange(index, count);
             return items;
         }
-
-        public ObservableCollection<MemberNewWord> GetCurrentGridItems()
-        {
-            return members;
-        }
-        public ObservableCollection<MemberNewWord> GetAllMembers()
-        {
-            return members_copy;
-        }
-        public List<TempWord> getWordsCopy()
-        {
-            return copyWordList;
-        }
-        public void populateAllMembers(List<TempWord> words)
-        {
-            members_copy = new ObservableCollection<MemberNewWord>();
-            Random rnd = new Random();
-            var converter = new BrushConverter();
-
-            string[] colors = new string[10] {"#32a852","#316e78", "#7919c2", "#a86c05", "#e02f1b",
-                                                "#3d0a04","#0d8aff","#e300d0","#ab495b","#5ec936"};
-            int counter = 1;
-            foreach(TempWord w in words)
-            {
-                if(w.WordContext_Ids.Split(",").Length == 0)
-                {
-                    continue;
-                }
-                string context = getContextString(w);
-                //string time = getPlayHeadTimeString(w);
-                string time = "";
-                MemberNewWord m = new MemberNewWord { Number = counter.ToString(), WordDBId = w.Id, WordObj = w, Character = w.Name.Substring(0, 1), BGColor = (Brush)converter.ConvertFromString(colors[rnd.Next(colors.Length)]), Name = w.Name, Position = time, Context = context};
-                members_copy.Add(m);
-                
-                counter += 1;
-            }
-            //removeExistingWords();
-        }
-
         public void removeExistingWords()
         {
-            worker = new BackgroundWorker();
-            removedMembers = new ObservableCollection<MemberNewWord>();
+            _removedMembers = new ObservableCollection<MemberNewWord>();
 
-            worker.DoWork += worker_DoWork;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            worker.ProgressChanged += worker_update;
-            worker.WorkerReportsProgress = true;
-            worker.RunWorkerAsync();
+            _worker.DoWork += worker_DoWork;
+            _worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            _worker.ProgressChanged += worker_update;
+            _worker.WorkerReportsProgress = true;
+            _worker.RunWorkerAsync();
         }
-
         private void worker_update(object sender, ProgressChangedEventArgs e)
         {
-            removedMembers.Add((MemberNewWord)e.UserState);
-            members.Remove((MemberNewWord)e.UserState);
+            _removedMembers.Add((MemberNewWord)e.UserState);
+            _currentMembers.Remove((MemberNewWord)e.UserState);
         }
-
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Console.WriteLine("worker finished");
-            string messageBoxText = "";
-            foreach(MemberNewWord m in removedMembers)
-            {
-                messageBoxText += m.Name;
-                messageBoxText += "\n\t";
-                messageBoxText += m.Context;
-                messageBoxText += "\n\n";
+            //string messageBoxText = "";
+            //foreach (MemberNewWord m in _removedMembers)
+            //{
+            //    messageBoxText += m.Name;
+            //    messageBoxText += "\n\t";
+            //    messageBoxText += m.Context;
+            //    messageBoxText += "\n\n";
 
-                
-                for (int i = 0; i < m.WordObj.WordContext_Ids.Split(",").Length; i++)
-                {
-                    WordContext wContext = WordServices.getWordContextByID(m.WordObj.WordContext_Ids[i]);
-                    WordServices.addContextToWord(m.WordDBId, wContext);
-                }
-                
-            }
-            //string messageBoxText = "Do you want to save changes?";
-            string caption = "The Words already existing in database.";
-            MessageBoxButton button = MessageBoxButton.OK;
-            MessageBoxImage icon = MessageBoxImage.Information;
-            MessageBoxResult result;
 
-            result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
+            //    for (int i = 0; i < m.WordObj.WordContext_Ids.Split(",").Length; i++)
+            //    {
+            //        WordContext wContext = WordServices.getWordContextByID(m.WordObj.WordContext_Ids[i]);
+            //        WordServices.addContextToWord(m.WordDBId, wContext);
+            //    }
+
+            //}
+            ////string messageBoxText = "Do you want to save changes?";
+            //string caption = "The Words already existing in database.";
+            //MessageBoxButton button = MessageBoxButton.OK;
+            //MessageBoxImage icon = MessageBoxImage.Information;
+            //MessageBoxResult result;
+
+            //result = MessageBox.Show(messageBoxText, caption, button, icon, MessageBoxResult.Yes);
         }
-
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
-            foreach (Models.MemberNewWord m in members_copy)
+            foreach (MemberNewWord m in _allMembers)
             {
                 int id = WordServices.checkIfWordExists(m.Name);
                 if (id != -1)
                 {
-                    Console.WriteLine("removed " + m.Name);
                     m.WordDBId = id;
-                    worker.ReportProgress(id, m);
+                    _worker.ReportProgress(id, m);
                 }
             }
         }
 
-
-
-
-        public void updateGrid(string command)
-        {
-            bool last_page = false;
-            if (Current_page * PPI > members_copy.Count)
-            {
-                last_page = true;
-            }
-            if((last_page && command.Equals("next")) || (Current_page == 1 && command.Equals("prev")))
-            {
-                return;
-            }
-            if (command.Equals("next") && !last_page)
-            {
-                Current_page += 1;
-            }else if (command.Equals("prev") && Current_page > 1)
-            {
-                Current_page -= 1;
-            }
-            //List<Word> wordList = new List<Word>(copyWordList);
-            updateCurrentMembers();
-            //addMembersToGrid(Splice(wordList, (Current_page - 1) * PPI, PPI));
-        }
-
-        private void updateCurrentMembers()
-        {
-            List<MemberNewWord> members_ = new List<MemberNewWord>(GetAllMembers());
-            members_ = Splice(members_, (Current_page - 1) * PPI, PPI);
-            members = new ObservableCollection<MemberNewWord>(members_);
-
-        }
-
-        //private void addMembersToGrid(List<Word> copy_list)
-        //{
-        //    //Random rnd = new Random();
-        //    //var converter = new BrushConverter();
-        //    members = new ObservableCollection<Member>();
-        //    //members_copy = new ObservableCollection<Member>();
-        //    //string[] colors = new string[10] {"#32a852","#316e78", "#7919c2", "#a86c05", "#e02f1b",
-        //    //                                    "#3d0a04","#0d8aff","#e300d0","#ab495b","#5ec936"};
-        //    //int counter = (Current_page - 1) * PPI + 1;
-        //    foreach (Word w in copy_list)
-        //    {
-        //        //string context = getContextString(w);
-        //        //string time = getPlayHeadTimeString(w);
-        //        Member m = new Member { Number = counter.ToString(), Character = w.Name.Substring(0, 1), BGColor = (Brush)converter.ConvertFromString(colors[rnd.Next(colors.Length)]), Name = w.Name, Position = time, Context = context};
-        //        members.Add(m);
-        //        //members_copy.Add(m);
-        //        //counter += 1;
-        //    }
-
-        //    //wordTitleText.Text = copy_list.Count.ToString() + " Words";
-        //    //membersDataGrid.ItemsSource = members;        //uncomment out
-        //}
-
-        private string getPlayHeadTimeString(TempWord w)
-        {
-            string s = "";
-            
-            for (int i = 0; i < w.WordContext_Ids.Split(",").Length; i++)
-            {
-                WordContext wC = WordServices.getWordContextByID(w.WordContext_Ids[i]);
-                s = string.Concat(s, wC.Address.SubLocation);
-                s = string.Concat(s, "\n");
-            }
-           
-            return s;
-        }
-
-        private string getContextString(TempWord w)
-        {
-            string s = "";
-            List<WordContext> wContexts = WordServices.getWordContextsFromTempWord(w);
-            for (int i = 0; i < wContexts.Count; i++)
-            {
-                WordContext wC = wContexts[i];
-                s = string.Concat(s, wC.Content);
-                //if(i != w.WordContext_Ids.Split(",").Length - 1)
-                //{
-                //    s = string.Concat(s, "\n+ ");
-                //}
-                
-            }
-            //foreach(WordContext a in w.WordContexts)
-            //{
-            //    s = string.Concat(s, a.Content);
-            //    s = string.Concat(s, "\n+ ");
-            //}
-            return s;
-        }
+        public int Current_page { get => _currentPage; set => _currentPage = value; }
+        public bool IsLastPage { get => _lastPage; set => _lastPage = value; }
+        public List<TempWord> TempWordList => _tempWordList;
+        public ObservableCollection<MemberNewWord> AllMembers { get => _allMembers; set => _allMembers = value; }
+        public ObservableCollection<MemberNewWord> CurrentMembers { get => _currentMembers; set { _currentMembers = value;} }
     }
     public class MemberNewWord
     {
@@ -251,7 +255,8 @@ namespace SubProgWPF.Models
         public string Number { get; set; }
         public string Name { get; set; }
         public string Position { get; set; }
-        public string Context { get; set; }
+        public ObservableCollection<StorageContext> Contexts { get; set; }
+        //public string Context { get; set; }
         public Brush BGColor { get; set; }
         public TempWord WordObj { get; set; }
     }
