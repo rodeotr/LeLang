@@ -7,12 +7,20 @@
         xmlns:viewsCollections="clr-namespace:SubProgWPF.Views.Collections"
         xmlns:viewsLeftPanel="clr-namespace:SubProgWPF.Views.LeftPanel"
         xmlns:vms="clr-namespace:SubProgWPF.ViewModels"
-        xmlns:vmsLearning="clr-namespace:SubProgWPF.ViewModels.Learning"
+        xmlns:vmsLearning="clr-namespace:SubProgWPF.ViewModels.Learn"
+        xmlns:vmsDashboard="clr-namespace:SubProgWPF.ViewModels.Dashboard"
+        xmlns:vmsStorage="clr-namespace:SubProgWPF.ViewModels.Storage"
+        xmlns:vmsSettings="clr-namespace:SubProgWPF.ViewModels.Settings"
+        xmlns:vmsMedia="clr-namespace:SubProgWPF.ViewModels.Media"
         xmlns:vmsCollections="clr-namespace:SubProgWPF.ViewModels.Collections"
         xmlns:vmsTest="clr-namespace:SubProgWPF.ViewModels.Test"
         xmlns:vlc="clr-namespace:Vlc.DotNet.Wpf;assembly=Vlc.DotNet.Wpf"
         WindowStyle="None" WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="720" Width="1080" AllowsTransparency="True" Background="Transparent">
+        Title="MainWindow" 
+        Height="720" 
+        Width="1080" 
+        AllowsTransparency="True" 
+        Background="Transparent">
 
     <!--<Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
@@ -61,32 +69,32 @@
             <Border Grid.Column="1" Grid.Row="0" Background="#ecf0f1" Grid.RowSpan="2" Visibility="Visible">
                 <Grid>
                     <Grid.Resources>
-                        <DataTemplate DataType="{x:Type vmsLearning:TabLearnViewModel}">
+                        <DataTemplate DataType="{x:Type vmsLearning:MenuLearnViewModel}">
                             <viewsLearn:tabLearn/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:MenuDashViewModel}">
+                        <DataTemplate DataType="{x:Type vmsDashboard:MenuDashboardViewModel}">
                             <viewsLeftPanel:TabDashBoardView/>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vmsTest:TabTestViewModel}">
                             <viewsLeftPanel:TabTestView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:MenuTestDashViewModel}">
+                        <DataTemplate DataType="{x:Type vmsTest:MenuTestDashViewModel}">
                             <viewsLeftPanel:TabTestOverview/>
                         </DataTemplate>
                         
-                        <DataTemplate DataType="{x:Type vms:DataGridNewWordsViewModel}">
+                        <DataTemplate DataType="{x:Type vmsLearning:TabLearnNewWordsViewModel}">
                             <viewsLearn:tabListWordsView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:MenuMediaViewModel}">
+                        <DataTemplate DataType="{x:Type vmsMedia:MenuMediaViewModel}">
                             <viewsLeftPanel:TabMediaView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:MenuStorageMainViewModel}">
+                        <DataTemplate DataType="{x:Type vmsStorage:MenuStorageMainViewModel}">
                             <viewsLeftPanel:TabStorageMainView/>
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vms:MenuCollectionsMainViewModel}">
                             <viewsCollections:TabCollectionsMainView/>
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vms:MenuSettingsViewModel}">
+                        <DataTemplate DataType="{x:Type vmsSettings:MenuSettingsViewModel}">
                             <viewsLeftPanel:TabSettingsView/>
                         </DataTemplate>
                     </Grid.Resources>

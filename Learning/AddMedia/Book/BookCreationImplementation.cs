@@ -18,7 +18,8 @@ namespace SubProgWPF.Learning.AddMedia
                 new Books()
                 {
                     Name = book.Name,
-                    PagePerSection = book.PPS
+                    StartPage = book.StartPage,
+                    EndPageOfSection = book.EndPageOfSection
                 });
 
             return success == 1 ? true : false;

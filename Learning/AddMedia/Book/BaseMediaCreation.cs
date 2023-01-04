@@ -22,7 +22,7 @@ namespace SubProgWPF.Learning.AddMedia
         {
             TranscriptionAddress transcription = new TranscriptionAddress()
             {
-                Id = TranscriptionServices.getTranscriptionCount(),
+                //Id = TranscriptionServices.getTranscriptionCount(),
                 TranscriptionLocation = iMedia.TranscriptionLocation,
                 Title = iMedia.Name
                 
@@ -55,13 +55,14 @@ namespace SubProgWPF.Learning.AddMedia
        
         public virtual void saveTheWords(IMedia iMedia, BackgroundWorker worker)
         {
-            GetWordsFromTranscriptionFile getWordsObj = new GetWordsFromTranscriptionFile(iMedia);
 
+            GetWordsFromTranscriptionFile getWordsObj = new GetWordsFromTranscriptionFile(iMedia, worker, LoadAppResources.loadRegexTypes());
+            
             //Progress<ReportClass> progress = new Progress<ReportClass>(progressUpdate);
 
             //progress.ProgressChanged += progressUpdate;
 
-            List<TempWord> tempWords = getWordsObj.GetWords(worker);
+            List<TempWord> tempWords = getWordsObj.GetWords(WordServices.getAllWords());
             TempServices.addWordsToTempWords(tempWords);
         }
        

@@ -13,6 +13,10 @@ using LangDataAccessLibrary.Services;
 using System.Media;
 using SubProgWPF.Windows;
 using static SubProgWPF.Models.TestOverviewModel;
+using SubProgWPF.Windows.Collections;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using SubProgWPF.Commands.Test;
 
 namespace SubProgWPF.ViewModels.Test
 {
@@ -23,12 +27,16 @@ namespace SubProgWPF.ViewModels.Test
         private int _remainingWordCount;
         private int _wordIndex = 0;
         private int _selectedSourceIndex = -1;
+
+        
+
         private string _remainingWord;
         private string _textTotalWordsToPractice;
         private ObservableCollection<TestMediaModel> _members;
         SoundPlayer player;
-        MenuTestDashViewModel _tabTestDashViewModel; 
-        private TestWord _currentTestWord;
+        MenuTestDashViewModel _tabTestDashViewModel;
+        LeftPanelViewModel leftPanelViewModel;
+        private Word _currentTestWord;
 
         public string ProgressBarValue
         {
@@ -74,7 +82,7 @@ namespace SubProgWPF.ViewModels.Test
         {
             get
             {
-                if (_testModel.WordsToBeTested.Count > 0) { return _testModel.WordsToBeTested[_wordIndex].WordContexts.Select(x => x.Type.ToString()).ToList(); }
+                if (_testModel.WordsToBeTested.Count > 0) { return _testModel.WordsToBeTested[_wordIndex].Contexts.Select(x => x.Type.ToString()).ToList(); }
                 else { return new List<string>(); }
             }
         }
@@ -88,12 +96,13 @@ namespace SubProgWPF.ViewModels.Test
                 OnPropertyChanged(nameof(SelectedSourceIndex));
                 if (SelectedSourceIndex != -1)
                 {
-                    string wordStr = _currentTestWord.WordContexts[SelectedSourceIndex].MediaLocation;
-                    string timeAppendix = getTimeAppendix(_currentTestWord.WordContexts[SelectedSourceIndex].Address.SubLocation);
+                    Address address = _currentTestWord.Contexts[SelectedSourceIndex].Address;
+                    string link = address.TranscriptionAddress.MediaLocation;
+                    string timeAppendix = getTimeAppendix(address.SubLocation);
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
                         //FileName = "https://www.google.com/search?q=" + wordStr + " meaning",
-                        FileName = wordStr + timeAppendix,
+                        FileName = link + timeAppendix,
                         UseShellExecute = true
                     });
 
@@ -149,9 +158,9 @@ namespace SubProgWPF.ViewModels.Test
             if(_currentTestWord == null) { return; }
             _currentTestWord = _testModel.WordsToBeTested[Index];
             Members = new ObservableCollection<TestMediaModel>();
-            foreach (TestWordContextWithMedia t in _currentTestWord.WordContexts)
+            foreach (WordContext t in _currentTestWord.Contexts)
             {
-                TestMediaModel TMM = new TestMediaModel() { MediaName = t.Title};
+                TestMediaModel TMM = new TestMediaModel() { MediaName = t.Address.TranscriptionAddress.Title};
                 switch (t.Type.ToString())
                 {
                     case "Youtube":
@@ -164,6 +173,7 @@ namespace SubProgWPF.ViewModels.Test
                         TMM.IconKind = "Movie";
                         break;
                 }
+                TMM.Context = t;
                 Members.Add(TMM);
             }
         }
@@ -179,6 +189,18 @@ namespace SubProgWPF.ViewModels.Test
             decrementTestProperties();
             setWordMediaOptions();
             if (isSuccess) { incrementScore(); }
+            updateDependentViewModels();
+        }
+
+        private void updateDependentViewModels()
+        {
+            if(leftPanelViewModel == null)
+            {
+                IHost _hostMain = (IHost)App.Current.Properties["MainViewModelHost"];
+                leftPanelViewModel = _hostMain.Services.GetRequiredService<LeftPanelViewModel>();
+            }
+            _tabTestDashViewModel.Model.TotalWordsToBeTested -= 1;
+            leftPanelViewModel.updateTestWordCount(_tabTestDashViewModel.Model.TotalWordsToBeTested); ;
         }
 
         private void incrementScore()
@@ -223,8 +245,8 @@ namespace SubProgWPF.ViewModels.Test
             Repetition repetition = new Repetition();
             repetition.Time = DateTime.Now;
             repetition.Success = isSuccess;
-            TestServices.AddRepetition(TestModel.WordsToBeTested[Index].WordDBId, repetition);
-            SubProgWPF.Utils.Test.updateEbbingIndexOfWord(TestModel.WordsToBeTested[Index].WordDBId, isSuccess);
+            TestServices.AddRepetition(TestModel.WordsToBeTested[Index].Id, repetition);
+            SubProgWPF.Utils.Test.updateEbbingIndexOfWord(TestModel.WordsToBeTested[Index].Id, isSuccess);
         }
 
         
@@ -258,6 +280,21 @@ namespace SubProgWPF.ViewModels.Test
             string time = prefix + ((hour * 60) + minute).ToString() + "m" + second.ToString() + "s";
             
             return time;
+        }
+        internal void showContext(TestMediaModel t)
+        {
+            Word w = _testModel.WordsToBeTested[_wordIndex];
+            ShowContextsWindow window = new ShowContextsWindow(
+                new StorageContext() { 
+                    Word = w.Name, 
+                    Context = t.Context,
+                    Time = "",
+                    MediaLocation = t.Context.Address.TranscriptionAddress.MediaLocation,
+                    IconKind = t.IconKind,
+                    Medium = t.MediaName
+                }
+                );
+            window.Show();
         }
 
         public override void updateTheFields()
@@ -297,6 +334,7 @@ namespace SubProgWPF.ViewModels.Test
     {
         public string IconKind { get; set; }
         public string MediaName { get; set; }
+        public WordContext Context { get; set; }
     }
     
 }

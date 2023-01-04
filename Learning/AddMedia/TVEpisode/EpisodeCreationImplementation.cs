@@ -19,7 +19,7 @@ namespace SubProgWPF.Learning.AddMedia
                 new FTVEpisode()
                 {
                     EpisodeIndex = Int32.Parse(episode.EpisodeIndex),
-                    TranscriptionAddress_Id = tA.Id
+                    TranscriptionAddress = tA
                 },
             episode.Name,
             episode.SeasonIndex);

@@ -2,6 +2,7 @@
 using LangDataAccessLibrary.Services;
 using SubProgWPF.Learning.Continue;
 using SubProgWPF.Learning.Interfaces;
+using SubProgWPF.Utils;
 using SubProgWPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,7 @@ namespace SubProgWPF.Learning.AddMedia
         public void createBook(IBook book, BackgroundWorker worker)
         {
             bookCreationImplementation = new BookCreationImplementation();
+
             int transcriptionId = bookCreationImplementation.CreateTranscription(book);
             book.TranscriptionId = transcriptionId;
             bookCreationImplementation.createBook(book);

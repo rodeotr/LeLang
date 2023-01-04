@@ -77,7 +77,7 @@ namespace SubProgWPF.Models
             for (int i = 0; i < _episodes.Count; i++)
             {
                 FTVEpisode e = _episodes[i];
-                TranscriptionAddress tA = TranscriptionServices.getTranscriptionByID(e.TranscriptionAddress_Id);
+                TranscriptionAddress tA = e.TranscriptionAddress;
                 MediaMember m = new MediaMember
                 {
                     Number = (mediaMembers.Count + 1).ToString(),

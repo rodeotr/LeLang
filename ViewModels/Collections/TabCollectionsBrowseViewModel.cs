@@ -4,6 +4,7 @@ using LangDataAccessLibrary.ServerDBModels;
 using LangDataAccessLibrary.Services;
 using Newtonsoft.Json;
 using SubProgWPF.Commands;
+using SubProgWPF.Commands.Collections;
 using SubProgWPF.Models;
 using SubProgWPF.Stores;
 using SubProgWPF.Utils;
@@ -53,9 +54,9 @@ namespace SubProgWPF.ViewModels.Collections
                 ServerCollectionOverview collectionsOverview = JsonConvert.DeserializeObject<ServerCollectionOverview>(json);
                 _collectionList = new ObservableCollection<ServerCollectionItem>(collectionsOverview.Collections);
             }
-            catch
+            catch(Exception e)
             {
-
+                Console.WriteLine(e.Message);
             }
 
         }

@@ -1,4 +1,5 @@
-﻿using SubProgWPF.Models;
+﻿using LangDataAccessLibrary.Models;
+using SubProgWPF.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,10 +22,25 @@ namespace SubProgWPF.Windows.Collections
         StorageContext _context;
         public ShowContextsWindow(StorageContext context)
         {
-            InitializeComponent();
             _context = context;
+            WordContext _wcontext;
+            if(context.Context is TempWordContext)
+            {
+                TempWordContext tWC = (TempWordContext)context.Context;
+                _wcontext = new WordContext()
+                {
+                    Address = tWC.Address,
+                    Content = tWC.Content,
+                    Type = tWC.Type
+                };
+            }
+            else { _wcontext = (WordContext)context.Context; }
+            context.Context = _wcontext;
+            InitializeComponent();
+            
             word.Text = context.Word;
-            medium.Text = context.Medium;
+            medium.Text = _wcontext.Type.ToString();
+            source.Text = _wcontext.Address.TranscriptionAddress.Title;
             setTimeText();
 
             setText();
@@ -38,16 +54,25 @@ namespace SubProgWPF.Windows.Collections
 
         private void setTimeText()
         {
-            timeStamp.Text = _context.Time;
+            timeStamp.Text = ((WordContext)(_context.Context)).Address.SubLocation;
         }
 
         private void setText()
         {
-            string text_ = _context.Context;
-            int index = text_.IndexOf(_context.Word);
-            text.Inlines.Add(new Run(text_.Substring(0, index)));
-            text.Inlines.Add(new Bold(new Run(text_.Substring(index, _context.Word.Length))));
-            text.Inlines.Add(new Run(text_.Substring(index + _context.Word.Length)));
+            string text_ = ((WordContext)(_context.Context)).Content;
+            int index = text_.IndexOf(_context.Word, StringComparison.InvariantCultureIgnoreCase);
+            
+            if(index != -1)
+            {
+                text.Inlines.Add(new Run(text_.Substring(0, index)));
+                text.Inlines.Add(new Bold(new Run(text_.Substring(index, _context.Word.Length))));
+                text.Inlines.Add(new Run(text_.Substring(index + _context.Word.Length)));
+            }
+            else
+            {
+                text.Text = text_;
+            }
+            
         }
 
         private void Close(object sender, RoutedEventArgs e)

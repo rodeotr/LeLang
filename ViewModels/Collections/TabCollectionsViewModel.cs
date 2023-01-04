@@ -2,6 +2,7 @@
 using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
 using SubProgWPF.Commands;
+using SubProgWPF.Commands.Collections;
 using SubProgWPF.Models;
 using SubProgWPF.Stores;
 using SubProgWPF.Windows.Collections;
@@ -32,6 +33,11 @@ namespace SubProgWPF.ViewModels.Collections
             _mainViewModel.OpenCollectionItemTab(_collections.FirstOrDefault(a => a.Name.Equals(collection.Name)));
         }
 
+        internal void showCollectionContent(CollectionModel item2)
+        {
+            throw new NotImplementedException();
+        }
+
         public ObservableCollection<CollectionModel> CollectionList { get => _collectionList; set { _collectionList = value; OnPropertyChanged(nameof(CollectionList)); } }
 
         public TabCollectionsViewModel(MenuCollectionsMainViewModel mainViewModel)
@@ -59,6 +65,7 @@ namespace SubProgWPF.ViewModels.Collections
 
                 CollectionModel model = new CollectionModel() {
                     Name = c.Name,
+                    Collections = c,
                     CollectionTypeIconKind = iconKind,
                     TotalElements = c.TotalEntities.ToString(),
                     TotalExamples = c.TotalContexts.ToString(),
@@ -151,6 +158,7 @@ namespace SubProgWPF.ViewModels.Collections
     {
         public string Name { get; set; }
         public ColorCouple Color { get; set; }
+        public LangDataAccessLibrary.Models.Collections Collections { get; set; }
         public string TotalElements { get; set; }
         public string TotalExamples { get; set; }
         public string TotalDownload { get; set; }

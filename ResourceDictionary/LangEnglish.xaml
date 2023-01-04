@@ -51,6 +51,8 @@
     <system:String x:Key="Learn_AddMedia_EpisodeIndex">Episode Index</system:String>
 
     <system:String x:Key="Learn_AddMedia_PPS">Page Count Per Section</system:String>
+    <system:String x:Key="Learn_AddMedia_StartPage">Start Page</system:String>
+    <system:String x:Key="Learn_AddMedia_EndPageFirstSession">End Page of First Session</system:String>
     
     <system:String x:Key="Learn_AddMedia_Text">Text</system:String>
 
@@ -80,6 +82,8 @@
     <system:String x:Key="TestOverView_TotalWordsPracticed">Total Words Practiced</system:String>
     <system:String x:Key="TestOverView_AcedWords">Aced Words</system:String>
     <system:String x:Key="TestOverView_Words">Words</system:String>
+    <system:String x:Key="TestOverView_TestOptions">Test Options</system:String>
+    <system:String x:Key="TestOverView_TestProgressTitle">Test Progress</system:String>
     <system:String x:Key="TestOverView_Collections">Collections</system:String>
     <system:String x:Key="TestOverView_TodayPracticed">Today Practiced</system:String>
     <system:String x:Key="TestOverView_TotalWords">Total Words</system:String>
@@ -106,6 +110,7 @@
 
     <system:String x:Key="Collections_Tab_Collections">COLLECTIONS</system:String>
     <system:String x:Key="Collections_Tab_Browse">BROWSE</system:String>
+    <system:String x:Key="Collections_Tab_Media">MEDIA</system:String>
     <system:String x:Key="Collections_Button_Create">Create</system:String>
     <system:String x:Key="Collections_Browse_Elements">Elements</system:String>
     <system:String x:Key="Collections_Browse_Examples">Examples</system:String>

@@ -21,7 +21,7 @@ namespace SubProgWPF.Learning.AddMedia
 
         public void saveTheWords(IBook book, BackgroundWorker worker) {
             GetWordsFromPDFFile getWordsFromPDF = new GetWordsFromPDFFile(book);
-            List<TempWord> tempWords = getWordsFromPDF.GetAllWordObjectsFromPDF(1, worker);
+            List<TempWord> tempWords = getWordsFromPDF.GetAllWordObjectsFromPDF(worker);
 
             TempServices.addWordsToTempWords(tempWords);
         }

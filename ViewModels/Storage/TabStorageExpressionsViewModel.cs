@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 
-namespace SubProgWPF.ViewModels
+namespace SubProgWPF.ViewModels.Storage
 {
     public class TabStorageExpressionsViewModel : ViewModelBase
     {

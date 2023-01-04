@@ -99,6 +99,7 @@ namespace SubProgWPF.Models
         public string LastTimeReviewed { get => _lastTimeReviewed; set => _lastTimeReviewed = value; }
         public int TodayPracticedGoalProgress { get => _todayPracticedGoalProgress; set => _todayPracticedGoalProgress = value; }
         public int TotalLearnedWordCount { get => AllLearnedWords.Count; }
+        public int TotalWordsToBeTested1 { get => _totalWordsToBeTested; set => _totalWordsToBeTested = value; }
 
         private void setAllWords()
         {

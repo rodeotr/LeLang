@@ -6,8 +6,9 @@ using SubProgWPF.Learning.AddMedia;
 using SubProgWPF.Learning.Interfaces;
 using SubProgWPF.Models;
 using SubProgWPF.ViewModels;
-using SubProgWPF.ViewModels.Learning;
-using SubProgWPF.ViewModels.Learning.AddMediaOptions;
+using SubProgWPF.ViewModels.Learn;
+using SubProgWPF.ViewModels.Learn.Tabs;
+using SubProgWPF.ViewModels.Learn.Tabs.AddMediaOptions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,8 +16,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows;
+using SubProgWPF.Learning.AddMedia;
 
-namespace SubProgWPF.Commands
+namespace SubProgWPF.Commands.Learn
 {
     public class TabAddCommand : CommandBase
     {
@@ -36,12 +39,48 @@ namespace SubProgWPF.Commands
 
         public override void Execute(object parameter)
         {
-
-            _tabAddViewModel.launchProgresBar();
-            worker.RunWorkerAsync();
+            if (IsFormValid())
+            {
+                _tabAddViewModel.launchProgresBar();
+                worker.RunWorkerAsync();
+            }
+            
 
         }
 
+        private bool IsFormValid()
+        {
+            if(_tabAddViewModel.SelectedMediaName.Length == 0
+                || _tabAddViewModel.TranscriptionLocation.Length == 0
+                || _tabAddViewModel.MaxWordFreq.Length == 0
+                )
+            {
+                return false;
+            }
+            switch (_tabAddViewModel.MediaType.ToString())
+            {
+                case "Youtube":
+                    if (_tabAddViewModel.MediaType.ToString().Equals("Youtube") &&
+                ((TabAddMediaYoutubeViewModel)_tabAddViewModel.CurrentViewModel).Link.Length == 0
+                )
+                    {
+                        return false;
+                    }
+                    break;
+                case "TVSeries":
+                    if(((TabAddMediaTVSeriesViewModel)_tabAddViewModel.CurrentViewModel).SeasonIndex.Length == 0
+                        || ((TabAddMediaTVSeriesViewModel)_tabAddViewModel.CurrentViewModel).EpisodeIndex.Length == 0)
+                    {
+                        return false;
+                    }
+                    break;
+
+            }
+
+            return true;
+            
+
+        }
 
         private void setWorkerProperties()
         {
@@ -63,15 +102,17 @@ namespace SubProgWPF.Commands
         private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var object_ = (ReportClass)e.UserState;
-            _tabAddViewModel.ProgressValue = object_.ReportProgress;
-            _tabAddViewModel.ProgressText = object_.Text;
+            _tabAddViewModel.Progress.CurrentProgress = object_.ReportProgress;
+            _tabAddViewModel.Progress.CurrentWord = object_.Text;
+            //_tabAddViewModel.ProgressValue = object_.ReportProgress;
+            //_tabAddViewModel.ProgressText = object_.Text;
         }
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
 
             MediaTypes.TYPE Type = getMediaTypeFromString();
             
-            Media media = new Media(
+            SubProgWPF.Learning.AddMedia.Media media = new SubProgWPF.Learning.AddMedia.Media(
                     _tabAddViewModel.SelectedMediaName,
                     _tabAddViewModel.TranscriptionLocation,
                     _tabAddViewModel.MaxWordFreq,
@@ -79,6 +120,14 @@ namespace SubProgWPF.Commands
                 );
 
             AddMedia addMedia = new AddMedia();
+
+            bool isFileTypeCompatible = IsFileTypeCompatible(_tabAddViewModel.TranscriptionLocation);
+
+            if (!isFileTypeCompatible)
+            {
+                promptError();
+                return;
+            }
 
             switch (Type)
             {
@@ -94,26 +143,30 @@ namespace SubProgWPF.Commands
                     addMedia.EpisodeCreationSequence(episode, worker);
                     break;
                 case MediaTypes.TYPE.Book:
-                    string PPS = ((TabAddMediaBookViewModel)_tabAddViewModel.CurrentViewModel).PagePerSection;
-                    Book book = new Book(media, Int32.Parse(PPS));
+                    string startPage = ((TabAddMediaBookViewModel)_tabAddViewModel.CurrentViewModel).StartPage;
+                    string endPage = ((TabAddMediaBookViewModel)_tabAddViewModel.CurrentViewModel).EndPageOfSection;
+                    Book book = new Book(media, Int32.Parse(startPage), Int32.Parse(endPage));
                     addMedia.createBook(book, worker);
                     break;
             }
 
 
             allWords = TempServices.getTempWordsByTranscriptionLocation(_tabAddViewModel.TranscriptionLocation);
-            List<Word> knownWords = WordServices.getAllWords();
+            //List<Word> knownWords = WordServices.getAllWords();
 
-            foreach (TempWord w in allWords)
-            {
+            //foreach (TempWord w in allWords)
+            //{
 
-                Word word = knownWords.FirstOrDefault(a => a.Name.Equals(w.Name));
-                if (word != null)
-                {
-                    WordServices.addContextArrayToWord(word.Id, w.WordContext_Ids);
-                }
-            }
-
+            //    Word word = knownWords.FirstOrDefault(a => a.Name.Equals(w.Name));
+            //    if (word != null)
+            //    {
+            //        foreach(TempWordContext tWC in w.Contexts)
+            //        {
+            //            WordServices.addContextToWord(word.Id, tWC);
+            //        }
+            //    }
+            //    //TempServices.deleteTempWordFromDB(w);
+            //}
             TranscriptionServices.updateTranscriptionTotalPossibleWords(_tabAddViewModel.TranscriptionLocation, allWords.Count);
 
         }
@@ -123,6 +176,29 @@ namespace SubProgWPF.Commands
             Enum.TryParse(_tabAddViewModel.MediaType, out Type);
             return Type;
 
+        }
+
+        private void promptError()
+        {
+            MessageBox.Show("Filetype should be 'SRT'");
+        }
+
+        private bool IsFileTypeCompatible(string location)
+        {
+            string fileExt = System.IO.Path.GetExtension(location);
+            if (getMediaTypeFromString() == MediaTypes.TYPE.Book)
+            {
+                if (fileExt == ".pdf")
+                {
+                    return true;
+                }
+            }
+            
+            if (fileExt == ".srt")
+            {
+                return true;
+            }
+            return false;
         }
         private void LaunchGrid(List<TempWord> allWords)
         {

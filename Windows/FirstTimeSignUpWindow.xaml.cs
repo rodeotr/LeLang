@@ -1,5 +1,8 @@
 ﻿using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
+using LangDataAccessLibrary.Services.IServices;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,11 +70,29 @@ namespace SubProgWPF.Windows
             }
 
             string gender = _maleActive ? "M" : "F";
-            AppServices.initializeFirstTimeObjects(
-                NameTextBox.Text,
-                LanguageComboBox.SelectedItem.ToString(),
-                LanguageToLearnComboBox.SelectedItem.ToString(),
-                gender);
+            IHost host = (IHost)App.Current.Properties["AppHost"];
+            IAppServices appServices = (IAppServices)host.Services.GetRequiredService<IAppServices>();
+
+
+            Language mainLanguage = SettingServices.getLanguageByString(LanguageComboBox.SelectedItem.ToString());
+            Language toLearnLanguage = SettingServices.getLanguageByString(LanguageToLearnComboBox.SelectedItem.ToString());
+            User user = new User()
+            {
+                Name = NameTextBox.Text,
+                MotherLanguage = mainLanguage,
+                CurrentLanguage = toLearnLanguage,
+                Gender = gender,
+                Score = new Score()
+            };
+
+
+
+            //appServices.initializeFirstTimeObjects(
+            //    NameTextBox.Text,
+            //    LanguageComboBox.SelectedItem.ToString(),
+            //    LanguageToLearnComboBox.SelectedItem.ToString(),
+            //    gender);
+            appServices.addUserToDB(user);
 
             _app.launchMainWindow();
             Close();

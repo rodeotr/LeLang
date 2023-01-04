@@ -6,12 +6,13 @@ namespace SubProgWPF.Models
 {
     public class LeftPanelModel
     {
-        private readonly List<LeftMenuItemModel> _leftMenuItems;
+        private List<LeftMenuItemModel> _leftMenuItems;
 
         public LeftPanelModel(List<LeftMenuItemModel> leftMenuItems)
         {
             _leftMenuItems = leftMenuItems;
         }
-        public List<LeftMenuItemModel> LeftMenuItems => _leftMenuItems;
+
+        public List<LeftMenuItemModel> LeftMenuItems { get => _leftMenuItems; set => _leftMenuItems = value; }
     }
 }

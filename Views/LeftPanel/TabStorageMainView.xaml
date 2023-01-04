@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:SubProgWPF.Views.LeftPanel"
              xmlns:views="clr-namespace:SubProgWPF.Views.LeftPanel"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks" 
-             xmlns:vms="clr-namespace:SubProgWPF.ViewModels"
+             xmlns:vms="clr-namespace:SubProgWPF.ViewModels.Storage"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 

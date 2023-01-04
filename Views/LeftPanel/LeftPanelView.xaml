@@ -14,9 +14,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-
-
+        
         <Border Grid.Row="1" Background="#38a152" CornerRadius="20">
             <StackPanel Orientation="Vertical">
                 <Grid DockPanel.Dock="Top" Margin="0 20">
@@ -134,10 +132,17 @@
                         </StackPanel>
                     </Button>
                     <Button Style="{StaticResource menuButton}" Command="{Binding LeftPanelCommand}" CommandParameter="{Binding LeftPanel.LeftMenuItems[2].ItemName}">
-                        <StackPanel Width="140px" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <Icon:PackIconMaterial Kind="{Binding LeftPanel.LeftMenuItems[2].ItemLogoName}" Style="{StaticResource menuButtonIcon}"/>
-                            <TextBlock Text="{DynamicResource LeftPanel_Test}" Margin="20 10"/>
-                        </StackPanel>
+                        <Grid>
+                            <StackPanel Width="140px" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Icon:PackIconMaterial Kind="{Binding LeftPanel.LeftMenuItems[2].ItemLogoName}" Style="{StaticResource menuButtonIcon}"/>
+                                <Grid>
+                                    <Border Width="20" Height="20" Visibility="{Binding TestVisibility,Converter={StaticResource BoolToVis}}" CornerRadius="10" VerticalAlignment="Top" HorizontalAlignment="Right" Background="Red" Margin="0 0 7 0" Panel.ZIndex="2">
+                                        <TextBlock Text="{Binding TestWordCount}" FontSize="12" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <TextBlock Text="{DynamicResource LeftPanel_Test}" Margin="20 10"/>
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
                     </Button>
                     <Button Style="{StaticResource menuButton}" Command="{Binding LeftPanelCommand}" CommandParameter="{Binding LeftPanel.LeftMenuItems[3].ItemName}">
                         <StackPanel Width="140px" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -196,7 +201,7 @@
                         </StackPanel>
                     </Button>
                     
-                    <Button Style="{StaticResource menuButton}" Margin="20 30 0 0"  Command="{Binding LeftPanelCommand}" CommandParameter="{Binding LeftPanel.LeftMenuItems[7].ItemName}">
+                    <Button Style="{StaticResource menuButton}" Margin="20 30 0 0"  Command="{Binding LeftPanelCommand}" CommandParameter="{Binding LeftPanel.LeftMenuItems[8].ItemName}">
                         <StackPanel Width="140px" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Icon:PackIconMaterial Kind="{Binding LeftPanel.LeftMenuItems[8].ItemLogoName}" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="{DynamicResource LeftPanel_Settings}" Margin="20 10"/>

@@ -17,8 +17,24 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="1" Height="40">
-            <TextBox x:Name="LinkTextBox" Width="180" Style="{DynamicResource SignUpTextBoxStyle}" Text="{Binding PagePerSection}" FontSize="18px" Padding="10 0"   VerticalContentAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="3" PreviewTextInput="PreviewTextInputMaxFreq"/>
-            <TextBlock IsHitTestVisible="False" Text="{DynamicResource Learn_AddMedia_PPS}" Margin="10" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
+            <TextBox x:Name="startPage" Width="180" Style="{DynamicResource SignUpTextBoxStyle}" Text="{Binding StartPage}" FontSize="18px" Padding="10 0"   VerticalContentAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="3" PreviewTextInput="PreviewTextInputMaxFreq"/>
+            <TextBlock IsHitTestVisible="False" Text="{DynamicResource Learn_AddMedia_StartPage}" Margin="10" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Text, ElementName=startPage}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+        
+        <Grid Grid.Row="2" Height="40" Margin="0 10">
+            <TextBox x:Name="LinkTextBox" Width="180" Style="{DynamicResource SignUpTextBoxStyle}" Text="{Binding EndPageOfSection}" FontSize="18px" Padding="10 0"   VerticalContentAlignment="Center" HorizontalAlignment="Left" Grid.ColumnSpan="3" PreviewTextInput="PreviewTextInputMaxFreq"/>
+            <TextBlock IsHitTestVisible="False" Text="{DynamicResource Learn_AddMedia_EndPageFirstSession}" Margin="10" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed"/>

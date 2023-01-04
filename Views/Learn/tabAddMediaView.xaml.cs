@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using SubProgWPF.ViewModels;
-using SubProgWPF.ViewModels.Learning;
+using SubProgWPF.ViewModels.Learn;
+using SubProgWPF.ViewModels.Learn.Tabs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,10 +21,10 @@ namespace SubProgWPF.Views.Learn
     /// <summary>
     /// Interaction logic for tabAddMedia.xaml
     /// </summary>
-    public partial class tabAddMedia : UserControl
+    public partial class tabAddMediaView : UserControl
     {
         private Regex _regex;
-        public tabAddMedia()
+        public tabAddMediaView()
         {
             InitializeComponent();
         }
@@ -33,6 +34,7 @@ namespace SubProgWPF.Views.Learn
             if(((MouseButtonEventArgs)e).ClickCount == 1)
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.DefaultExt = ".srt";
                 if (openFileDialog.ShowDialog() == true)
                     //txtEditor.Text = File.ReadAllText(openFileDialog.FileName);
                     ((TabAddMediaViewModel)(this.DataContext)).TranscriptionLocation = openFileDialog.FileName;

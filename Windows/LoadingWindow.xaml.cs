@@ -20,7 +20,6 @@ namespace SubProgWPF.Windows
     {
         public LoadingWindow()
         {
-            Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
             InitializeComponent();
         }
     }

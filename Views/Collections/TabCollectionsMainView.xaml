@@ -17,10 +17,13 @@
             <DataTemplate DataType="{x:Type vms:TabCollectionsViewModel}">
                 <views:TabCollectionsView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vms:TabCollectionsBrowseViewModel}">
-                <views:TabCollectionsBrowseView/>
+            <DataTemplate DataType="{x:Type vms:TabCollectionsMediaViewModel}">
+                <views:TabCollectionsMediaView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type vms:TabCollectionsItemViewModel}">
+                <views:TabCollectionsItemView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vms:TabCollectionsMediaItemViewModel}">
                 <views:TabCollectionsItemView/>
             </DataTemplate>
         </Grid.Resources>
@@ -42,15 +45,14 @@
                 <TabItem Template="{DynamicResource TabItemTemplateLearning}">
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal">
-                            <Icon:PackIconMaterial Kind="Earth" Width="15px" Height="15px" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="green"/>
-                            <TextBlock Text="{DynamicResource Collections_Tab_Browse}" Foreground="#000" FontSize="15"/>
+                            <Icon:PackIconMaterial Kind="Filmstrip" Width="15px" Height="15px" Margin="0 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="green"/>
+                            <TextBlock Text="{DynamicResource Collections_Tab_Media}" Foreground="#000" FontSize="15"/>
                         </StackPanel>
                     </TabItem.Header>
                 </TabItem>
 
             </TabControl>
         </Border>
-
         <ContentControl Grid.Row="1"  Content="{Binding CurrentCollectionsViewModel}" Focusable="False"/>
     </Grid>
 </UserControl>

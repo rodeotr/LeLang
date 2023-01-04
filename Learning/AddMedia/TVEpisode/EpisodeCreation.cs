@@ -19,13 +19,13 @@ namespace SubProgWPF.Add
             EpisodeIndex = episodeIndex;
         }
 
-        public int createEpisode(int transcriptionId)
+        public int createEpisode(TranscriptionAddress transcription)
         {
             return TVSeriesCreator.CreateEpisode(
                 new FTVEpisode()
                 {
                     EpisodeIndex = Int32.Parse(EpisodeIndex),
-                    TranscriptionAddress_Id = transcriptionId,
+                    TranscriptionAddress = transcription,
                     Name = MediaName
                 },
             MediaName,

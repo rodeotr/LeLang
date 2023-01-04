@@ -1,58 +1,57 @@
-﻿using LangDataAccessLibrary.Models;
+﻿using LangDataAccessLibrary;
+using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
+using SubProgWPF.Interfaces.Dashboard;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using static SubProgWPF.ViewModels.MenuDashViewModel;
 
 namespace SubProgWPF.Models
 {
     public class DashModel
     {
-        private List<DashStatisticsModel> _dashStatisticsModel;
-        private int _totalMediaCount = 0;
-        //List<IDashMedia> _tvSeries;
-        //List<IDashMedia> _youtubeVideos;
-        //List<IDashMedia> _tvEpisodes;
-        //List<IDashMedia> _movies;
-        //List<IDashMedia> _podcastAndVideos;
-        //List<IDashMedia> _books;
 
-        ObservableCollection<DashUnfinishedMediaModel> _unfinishedMediaList;
+        private DashboardCardItem _episodeCard;
+        private DashboardCardItem _movieCard;
+        private DashboardCardItem _bookCard;
+        private DashboardCardItem _youtubeCard;
+        private ObservableCollection<DashUnfinishedMediaModel> _unfinishedMediaList;
+
+        public ObservableCollection<DashUnfinishedMediaModel> UnfinishedMediaList { get => _unfinishedMediaList; set => _unfinishedMediaList = value; }
+        public DashboardCardItem YoutubeCard { get => _youtubeCard; set => _youtubeCard = value; }
+        public DashboardCardItem TVEpisodeCard { get => _episodeCard; set => _episodeCard = value; }
+        public DashboardCardItem MovieCard { get => _movieCard; set => _movieCard = value; }
+        public DashboardCardItem BookCard { get => _bookCard; set => _bookCard = value; }
 
         public DashModel()
         {
-            _dashStatisticsModel = new List<DashStatisticsModel>();
-
-            createYoutubeList();
-            createTVEpisodesList();
-            createMoviesList();
-            createBooksList();
-
             createUnfinishedMediaList();
         }
-
-
-        public ObservableCollection<DashUnfinishedMediaModel> UnfinishedMediaList { get => _unfinishedMediaList; set => _unfinishedMediaList = value; }
-        public List<DashStatisticsModel> DashMediaOverviews { get => _dashStatisticsModel; set => _dashStatisticsModel = value; }
-        public int TotalMediaCount { get => _totalMediaCount; set => _totalMediaCount = value; }
 
         public void createUnfinishedMediaList()
         {
             _unfinishedMediaList = new ObservableCollection<DashUnfinishedMediaModel>();
+
             List<FTVEpisode> e = MediaServices.getUnfinishedTVSeries();
             List<FYoutube> y = MediaServices.getUnfinishedYoutubeVideos();
             List<Books> b = MediaServices.getUnfinishedBooks();
+            List<Books> m = MediaServices.getUnfinishedBooks();
+
+
+
+
             foreach (FTVEpisode ee in e)
             {
-                string transcriptionLocation = TranscriptionServices.getTranscriptionByID(ee.TranscriptionAddress_Id).TranscriptionLocation;
+                string transcriptionLocation = ee.TranscriptionAddress.TranscriptionLocation;
                 string name = ee.Name + " S" + ee.Season.SeasonIndex.ToString().PadLeft(2, '0') +
                     "E" + ee.EpisodeIndex.ToString().PadLeft(2, '0');
 
                 DashUnfinishedMediaModel model = new DashUnfinishedMediaModel()
                 {
+                    Type = MediaTypes.TYPE.TVSeries,
+                    MediaIdInDB = ee.Id,
                     Name = name,
                     IconKind = "DesktopMac",
                     Progress = TranscriptionServices.getMediaProgress(transcriptionLocation),
@@ -64,6 +63,8 @@ namespace SubProgWPF.Models
             {
                 DashUnfinishedMediaModel model = new DashUnfinishedMediaModel()
                 {
+                    Type = MediaTypes.TYPE.Youtube,
+                    MediaIdInDB = yy.Id,
                     Name = yy.Name,
                     IconKind = "Youtube",
                     Progress = TranscriptionServices.getYoutubeMediaProgress(yy.Link),
@@ -75,9 +76,11 @@ namespace SubProgWPF.Models
             }
             foreach (Books bb in b)
             {
-                string transcriptionLocation = TranscriptionServices.getTranscriptionByID(bb.TranscriptionAddress_Id).TranscriptionLocation;
+                string transcriptionLocation = bb.TranscriptionAddress.TranscriptionLocation;
                 DashUnfinishedMediaModel model = new DashUnfinishedMediaModel()
                 {
+                    Type = MediaTypes.TYPE.Book,
+                    MediaIdInDB = bb.Id,
                     Name = bb.Name,
                     IconKind = "Book",
                     Progress = TranscriptionServices.getMediaProgress(transcriptionLocation),
@@ -89,137 +92,65 @@ namespace SubProgWPF.Models
 
         }
 
-        private void createMoviesList()
+
+        public DashboardCardItem createYoutubeCard(int mediaCount, int wordCount)
+        {
+            return new DashboardCardItem()
+            {
+                MediaKind = MediaTypes.TYPE.Youtube.ToString(),
+                MediaCount = mediaCount.ToString(),
+                WordCount = wordCount.ToString(),
+                IconKind = "Youtube",
+                BackgroundImagePath = "/Assets/Images/despacito.jpg"
+            };
+        }
+
+        public DashboardCardItem createMoviesCard(int mediaCount, int wordCount)
         {
             List<FMovies> movies = MediaServices.getAllMovies();
-            List<IDashMedia> _movies = new List<IDashMedia>();
-            foreach (FMovies m in movies)
+            return new DashboardCardItem()
             {
-                _movies.Add(new DashMovie() { Name = m.Name, IsFinished = false, LearnedTotalWords = 0 });
-                _totalMediaCount += 1;
-            }
-            _dashStatisticsModel.Add(new DashStatisticsModel()
-            {
-                Name = "Movies",
-                MediaCount = _movies.Count.ToString(),
-                WordCount = MediaServices.getMovieWords().Count.ToString()
-            });
+                MediaKind = MediaTypes.TYPE.TVSeries.ToString(),
+                MediaCount = movies.Count.ToString(),
+                WordCount = MediaServices.getMovieWords().Count.ToString(),
+                IconKind = "FilmStrip",
+                BackgroundImagePath = "/Assets/Images/harry.jpg"
+            };
         }
 
-        private void createTVEpisodesList()
+        public DashboardCardItem createTVEpisodeCard(int mediaCount, int wordCount)
         {
-            List<FTVEpisode> episodes = MediaServices.getTVEpisodes();
-            List<IDashMedia> _tvEpisodes = new List<IDashMedia>();
-            foreach (FTVEpisode e in episodes)
+            List<FTVEpisode> episodeList = MediaServices.getTVEpisodes();
+            return new DashboardCardItem()
             {
-                string transcriptionLocation = TranscriptionServices.getTranscriptionByID(e.TranscriptionAddress_Id).TranscriptionLocation;
-                _tvEpisodes.Add(new DashTVEpisode() { 
-                    Name = e.Name, 
-                    IsFinished = e.IsFinished, 
-                    LearnedTotalWords = 0,
-                    MediaProgress = TranscriptionServices.getMediaProgress(transcriptionLocation)
-                });
-                _totalMediaCount += 1;
-            }
-            _dashStatisticsModel.Add(new DashStatisticsModel()
-            {
-                    Name = "TVEpisodes",
-                    MediaCount = _tvEpisodes.Count.ToString(),
-                    WordCount = MediaServices.getTVWords().Count.ToString()
-            });
-        }
-
-
-        private void createYoutubeList()
-        {
-            List<FYoutube> series = MediaServices.getAllYoutubeVideos();
-            List<IDashMedia> _youtubeVideos = new List<IDashMedia>();
-            foreach (FYoutube y in series)
-            {
-                _youtubeVideos.Add(new DashTVSerie() {
-                    Name = y.Name, 
-                    IsFinished = y.IsFinished, 
-                    LearnedTotalWords = 0,
-                    MediaProgress = TranscriptionServices.getYoutubeMediaProgress(y.Link)
-                });
-                _totalMediaCount += 1;
-            }
-            _dashStatisticsModel.Add(new DashStatisticsModel()
-            {
-                    Name = "Youtube",
-                    MediaCount = _youtubeVideos.Count.ToString(),
-                    WordCount = MediaServices.getYoutubeWords().Count.ToString()
-            });
-        }
-
-        private void createBooksList()
-        {
-            List<Books> books = MediaServices.getAllBooks();
-            List<IDashMedia> _books = new List<IDashMedia>();
-            foreach (Books b in books)
-            {
-                _books.Add(new DashMovie() { Name = b.Name, IsFinished = false, LearnedTotalWords = b.TotalLearnedWords });
-                _totalMediaCount += 1;
-            }
-            _dashStatisticsModel.Add(new DashStatisticsModel()
-            {
-                Name = "Books",
-                MediaCount = _books.Count.ToString(),
-                WordCount = MediaServices.getBookWords().Count.ToString()
-            });
-        }
-
-        public string getTotalWordCount()
-        {
-            int count = 0;
-            foreach(DashStatisticsModel d in _dashStatisticsModel)
-            {
-                count += Int32.Parse(d.WordCount);
-            }
-            return count.ToString();
+                MediaKind = MediaTypes.TYPE.TVSeries.ToString(),
+                MediaCount = episodeList.Count.ToString(),
+                WordCount = MediaServices.getTVWords().Count.ToString(),
+                IconKind = "DesktopMac",
+                BackgroundImagePath = "/Assets/Images/got.jpg"
+            };
         }
         
-    }
-
-    public class DashTVSerie : IDashMedia
-    {
-        public string Name { get; set; }
-        public bool IsFinished { get; set; }
-        public int LearnedTotalWords { get; set; }
-        public int EpisodeCount { get; set; }
-        public int MediaProgress { get; set; }
-    }
-
-    public class DashTVEpisode : IDashMedia
-    {
-        public string Name { get; set; }
-        public bool IsFinished { get; set; }
-        public int LearnedTotalWords { get; set; }
-        public int MediaProgress { get; set; }
+        public DashboardCardItem createBooksCard(int mediaCount, int wordCount)
+        {
+            List<Books> books = MediaServices.getAllBooks();
+            return new DashboardCardItem()
+            {
+                MediaKind = MediaTypes.TYPE.Youtube.ToString(),
+                MediaCount = books.Count.ToString(),
+                WordCount = MediaServices.getBookWords().Count.ToString(),
+                IconKind = "Book",
+                BackgroundImagePath = "/Assets/Images/book1.png"
+            };
+        }
 
     }
-    public class DashMovie : IDashMedia
-    {
-        public string Name { get; set; }
-        public bool IsFinished { get; set; }
-        public int LearnedTotalWords { get; set; }
-        public int MediaProgress { get; set; }
-    }
-    public class DashYoutube : IDashMedia
-    {
-        public string Name { get; set; }
-        public bool IsFinished { get; set; }
-        public int LearnedTotalWords { get; set; }
-        public int MediaProgress { get; set; }
-    }
-    public class DashStatisticsModel
-    {
-        public string Name { get; set; }
-        public string MediaCount { get; set; }
-        public string WordCount { get; set; }
-    }
+
+    
     public class DashUnfinishedMediaModel
     {
+        public MediaTypes.TYPE Type { get; set; }
+        public int MediaIdInDB { get; set; }
         public string Name { get; set; }
         public string IconKind { get; set; }
         public string IconBackgroundColor { get; set; }

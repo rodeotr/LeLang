@@ -86,9 +86,11 @@ namespace SubProgWPF.Models
         {
             string s = "";
             
-            for (int i = 0; i < w.WordContext_Ids.Split(",").Length; i++)
-            {
-                WordContext a = WordServices.getWordContextByID(Int32.Parse(w.WordContext_Ids.Split(",")[i]));
+            //for (int i = 0; i < w.WordContext_Ids.Split(",").Length; i++)
+            for (int i = 0; i < w.Contexts.Count; i++)
+                {
+                //WordContext a = WordServices.getWordContextByID(Int32.Parse(w.WordContext_Ids.Split(",")[i]));
+                WordContext a = w.Contexts[i];
                 s = string.Concat(s, a.Content);
                 s = string.Concat(s, "\n");
             }

@@ -17,12 +17,12 @@ namespace SubProgWPF.Models
     {
         
         private List<Word> _allLearnedWords;
-        private List<TestWord> _wordsToBeTested;
+        private List<Word> _wordsToBeTested;
         
 
         public TestModel(TYPE type)
         {
-            _wordsToBeTested = new List<TestWord>();
+            _wordsToBeTested = new List<Word>();
             _allLearnedWords = WordServices.getAllWords();
             
             setTestWordsList(type);
@@ -52,37 +52,39 @@ namespace SubProgWPF.Models
                     continue;
                 }
 
-                TestWord testWord = new TestWord() { Name = w.Name, WordDBId = w.Id };
-                List<TestWordContextWithMedia> wordContextList = new List<TestWordContextWithMedia>();
-                int context_count = 0;
-                string[] wContexts = w.WordContext_Ids.Split(",");
-                if(wContexts[0].Length > 0)
-                {
-                    for (int i = 0; i < wContexts.Length; i++)
-                    {
-                        int wC_Id = Int32.Parse(wContexts[i]);
+                //TestWord testWord = new TestWord() { Name = w.Name, WordDBId = w.Id };
+                //List<TestWordContextWithMedia> wordContextList = new List<TestWordContextWithMedia>();
+                //int context_count = 0;
+                ////string[] wContexts = w.WordContext_Ids.Split(",");
+                //if(w.Contexts.Count > 0)
+                //{
+                //    for (int i = 0; i < w.Contexts.Count; i++)
+                //    {
+                //        //int wC_Id = Int32.Parse(wContexts[i]);
 
-                        WordContext c = WordServices.getWordContextByID(wC_Id);
-                        TranscriptionAddress tA = TranscriptionServices.getTranscriptionByID(c.Address.TranscriptionAddress_Id);
-                        if (tA.MediaLocation != null)
-                        {
-                            context_count += 1;
-                            wordContextList.Add(new TestWordContextWithMedia()
-                            {
-                                Title = tA.Title,
-                                Type = MediaTypes.TYPE.TVSeries,
-                                Address = c.Address,
-                                Content = c.Content,
-                                MediaLocation = tA.MediaLocation
-                            });
-                        }
-                    }
-                }
+                //        //WordContext c = WordServices.getWordContextByID(wC_Id);
+                //        WordContext c = w.Contexts[i];
+                //        //TranscriptionAddress tA = TranscriptionServices.getTranscriptionByID(c.Address.TranscriptionAddress_Id);
+                //        TranscriptionAddress tA = c.Address.TranscriptionAddress;
+                //        if (tA.MediaLocation != null)
+                //        {
+                //            context_count += 1;
+                //            wordContextList.Add(new TestWordContextWithMedia()
+                //            {
+                //                Title = tA.Title,
+                //                Type = MediaTypes.TYPE.TVSeries,
+                //                Address = c.Address,
+                //                Content = c.Content,
+                //                MediaLocation = tA.MediaLocation
+                //            });
+                //        }
+                //    }
+                //}
                 
                 
-                context_count = 0;
-                testWord.WordContexts = wordContextList;
-                _wordsToBeTested.Add(testWord);
+                //context_count = 0;
+                //testWord.WordContexts = wordContextList;
+                _wordsToBeTested.Add(w);
                 
                 if(_wordsToBeTested.Count == maxWordCount)
                 {
@@ -95,7 +97,7 @@ namespace SubProgWPF.Models
 
 
         public List<Word> AllLearnedWords { get => _allLearnedWords; set => _allLearnedWords = value; }
-        public List<TestWord> WordsToBeTested { get => _wordsToBeTested; set => _wordsToBeTested = value; }
+        public List<Word> WordsToBeTested { get => _wordsToBeTested; set => _wordsToBeTested = value; }
 
 
         public void ShuffleMe<T>(IList<T> list)

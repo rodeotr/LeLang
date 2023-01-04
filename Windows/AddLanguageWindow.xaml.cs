@@ -3,6 +3,7 @@ using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
 using SubProgWPF.Models;
 using SubProgWPF.ViewModels;
+using SubProgWPF.ViewModels.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

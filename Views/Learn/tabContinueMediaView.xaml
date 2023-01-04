@@ -43,7 +43,7 @@
             </TextBlock>
         </Grid>
         <Grid Grid.Row="2" Grid.Column="1" Height="40" Margin="0 10">
-            <ComboBox x:Name="TitleComboBox" Style="{DynamicResource ComboRound}" FontSize="14px" Width="250px" HorizontalAlignment="Left" VerticalContentAlignment="Center" IsEditable="False" Text="{Binding SelectedMediaName}"  ItemsSource="{Binding MediaNames}"/>
+            <ComboBox x:Name="TitleComboBox" Style="{DynamicResource ComboRound}" FontSize="14px" Width="250px" HorizontalAlignment="Left" VerticalContentAlignment="Center" IsEditable="False" Text="{Binding SelectedMediaName, UpdateSourceTrigger=PropertyChanged}"  ItemsSource="{Binding MediaNames}"/>
             <TextBlock IsHitTestVisible="False" Text="{DynamicResource Learn_ContinueMedia_Title}" Margin="10,0,0,0" FontSize="15px" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="DarkGray">
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">

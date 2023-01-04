@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:SubProgWPF.Views.LeftPanel"
+             xmlns:vm="clr-namespace:SubProgWPF.ViewModels.Storage"
              mc:Ignorable="d" 
              d:DesignHeight="450" Margin="20 0">
     <UserControl.Resources>
@@ -12,6 +13,7 @@
         <local:ContextConverter x:Key="storageConverter"/>
         <BooleanToVisibilityConverter x:Key="VisConverter"/>
         <local:InvertedBoolConverter x:Key="InvertedBool"/>
+        
     </UserControl.Resources>
     <Grid>
         <TextBlock Visibility="{Binding Path=WordVisibility,Converter={StaticResource InvertedBool}}" Text="NO WORDS" FontSize="60" Foreground="#888" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -110,7 +112,10 @@
                                     <Border Width="40" Height="40" CornerRadius="50" Margin="0 0 10 0" Background="{Binding BGColor}">
                                         <TextBlock Text="{Binding Character}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
                                     </Border>
-                                    <TextBlock Text="{Binding Name}" FontSize="20" VerticalAlignment="Center"/>
+                                    <Grid>
+                                        <TextBlock Text="{Binding Name}" FontSize="20" VerticalAlignment="Center"/>
+                                        <Icon:PackIconMaterial Visibility="{Binding HasCollection, Converter={StaticResource VisConverter}}" Kind="Rhombus" Width="20px" Height="20px" Margin="0 2 -22 0" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="HotPink"/>
+                                    </Grid>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -120,7 +125,7 @@
                     <DataGridTemplateColumn Header="Contexts" IsReadOnly="True" Width="2.4*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ListView ItemsSource="{Binding Contexts}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0" Foreground="#fff" FontSize="15px">
+                                <ListView ItemsSource="{Binding Contexts}" ScrollViewer.HorizontalScrollBarVisibility="auto" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0" Foreground="#fff" FontSize="15px">
                                     <ListView.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <VirtualizingStackPanel Orientation="Horizontal"/>
@@ -129,7 +134,20 @@
 
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <Button  Style="{StaticResource gridSaveButton}" CommandParameter="{Binding}" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Contexts_ToolTip}">
+                                            <Button  Style="{StaticResource gridSaveButton}" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Contexts_ToolTip}">
+                                                <Button.CommandParameter>
+                                                    <MultiBinding Converter="{StaticResource storageConverter}">
+                                                        <Binding>
+                                                            <Binding.Source>
+                                                                ShowContext
+                                                            </Binding.Source>
+                                                        </Binding>
+                                                        <Binding Path=".">
+                                                        </Binding>
+                                                    </MultiBinding>
+                                                </Button.CommandParameter>
+
+
                                                 <!--<Button.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource storageConverter}">
                                                 <Binding Path="Name" />
@@ -144,19 +162,50 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="*">
+                    <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="1.1*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Style="{StaticResource gridSaveButton}" Name="context" Tag="{Binding}" CommandParameter="{Binding}" Margin="0 0 1 0" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Operations_Collection_ToolTip}">
-
-
+                                    <Button Style="{StaticResource gridSaveButton}" Name="context" Tag="{Binding}" Margin="0 0 1 0" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Operations_Collection_ToolTip}">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource storageConverter}">
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        CollectionAdd
+                                                    </Binding.Source>
+                                                </Binding>
+                                                <Binding Path=".">
+                                                </Binding>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
                                         <Icon:PackIconMaterial Kind="Rhombus" Width="20px" Height="20px"/>
                                     </Button>
-                                    <Button Style="{StaticResource gridSaveButton}" Margin="0 0 1 0" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding Number}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Operations_Edit_ToolTip}">
+                                    <Button Style="{StaticResource gridSaveButton}" Margin="0 0 1 0" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Operations_Edit_ToolTip}">
                                         <Icon:PackIconMaterial Kind="Pencil" Width="20px" Height="20px"/>
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource storageConverter}">
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        WordEdit
+                                                    </Binding.Source>
+                                                </Binding>
+                                                <Binding Path=".">
+                                                </Binding>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
                                     </Button>
-                                    <Button Style="{StaticResource gridSaveButton}" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding Number}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Operations_Delete_ToolTip}">
+                                    <Button Style="{StaticResource gridSaveButton}" Command="{Binding DataContext.GridCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGrid}}}" ToolTipService.ToolTip="{DynamicResource Storage_Header_Operations_Delete_ToolTip}">
+                                        <Button.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource storageConverter}">
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        WordDelete
+                                                    </Binding.Source>
+                                                </Binding>
+                                                <Binding Path=".">
+                                                </Binding>
+                                            </MultiBinding>
+                                        </Button.CommandParameter>
                                         <Icon:PackIconMaterial Kind="Delete" Width="20px" Height="20px"/>
                                     </Button>
                                 </StackPanel>

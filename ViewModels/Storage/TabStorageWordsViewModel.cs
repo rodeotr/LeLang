@@ -1,6 +1,7 @@
 ﻿using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
 using SubProgWPF.Commands;
+using SubProgWPF.Commands.Storage;
 using SubProgWPF.Models;
 using SubProgWPF.Windows;
 using SubProgWPF.Windows.Collections;
@@ -10,7 +11,7 @@ using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
 
-namespace SubProgWPF.ViewModels
+namespace SubProgWPF.ViewModels.Storage
 {
     public class TabStorageWordsViewModel : ViewModelBase
     {
@@ -22,10 +23,12 @@ namespace SubProgWPF.ViewModels
         private string _pageNum;
         private string _totalWordString;
         private bool _wordVisibility;
-
+        
         public TabStorageWordsViewModel(StorageWordsModel memberModel)
         {
             _command = new TabStorageCommand(this);
+
+
             _collections = getCollections();
 
             _membersModel = memberModel;
@@ -42,6 +45,18 @@ namespace SubProgWPF.ViewModels
 
         public StorageWordsModel StorageMemberModel { get => _membersModel; set => _membersModel = value; }
         public ObservableCollection<WordMember> CurrentMembers { get => _currentMembers; set { _currentMembers = value; OnPropertyChanged(nameof(CurrentMembers)); } }
+
+        internal void launchWordEditWindow(WordMember wM)
+        {
+            EditWordWindow window = new EditWordWindow(wM);
+            window.Show();
+        }
+
+        internal void Refresh()
+        {
+            _membersModel = new StorageWordsModel(WordServices.getAllWords());
+            _currentMembers = _membersModel.CurrentMembers;
+        }
 
         internal void launchAddToCollectionWindow(WordMember wM)
         {
@@ -64,6 +79,11 @@ namespace SubProgWPF.ViewModels
         {
             ShowContextsWindow contextsWindow = new ShowContextsWindow(context);
             contextsWindow.Show();
+        }
+
+        public void raisePropertyChangedEvent(string name)
+        {
+            OnPropertyChanged(name);
         }
 
         //MainWindow window = new MainWindow() { DataContext = new MainViewModel(_navigationStore, mediaPlayer, false) };

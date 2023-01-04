@@ -12,12 +12,10 @@ namespace SubProgWPF.Views.LeftPanel
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Type t = values[0] as Type;
+            string v1 = values[0].ToString();
+            object v2 = values[1];
             
-            String s = values[1] as String;
-            Console.WriteLine(values[0]);
-            Console.WriteLine(values[1]);
-            return values[0];
+            return new Tuple<string,object>(v1,v2);
             //return new Tuple<StorageContext, string>((StorageContext)values[0], "dsa");
         }
 

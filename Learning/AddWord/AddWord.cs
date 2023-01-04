@@ -5,6 +5,7 @@ using LangDataAccessLibrary.Services.WordCreators;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SubProgWPF.Learning.AddWord
@@ -12,45 +13,55 @@ namespace SubProgWPF.Learning.AddWord
     public class AddWord
     {
 
-        public static void AddWordToDB(TempWord word, string[] alternativeNames, MediaTypes.TYPE type)
+        public static void AddWordToDB(TempWord word, MediaTypes.TYPE type)
         {
-            createTheSelectedWord(word, alternativeNames, type);
+            createTheSelectedWord(word, type);
 
             //TempServices.UpdatePlayHead(word, wordIndex);
             //TempServices.IncrementTotalWordCount(word);
-
-
-
             //TempServices.deleteTempWordFromDB(word);
-
-            
         }
+        
 
-        private static void createTheSelectedWord(TempWord tempWord, string[] alternativeNames, MediaTypes.TYPE type)
+        private static int createTheSelectedWord(TempWord tempWord, MediaTypes.TYPE type)
         {
+
+            List<WordContext> contexts = new List<WordContext>();
+            foreach(TempWordContext tWC in tempWord.Contexts)
+            {
+                contexts.Add(new WordContext()
+                {
+                    Type = tWC.Type,
+                    Address = tWC.Address,
+                    Content = tWC.Content
+                });
+            }
+
             Word word = new Word()
             {
                 Name = tempWord.Name,
                 InitDate = DateTime.Now,
                 Repetition = new List<Repetition>(),
-                WordContext_Ids = tempWord.WordContext_Ids,
+                Contexts = contexts,
+                //WordContext_Ids = tempWord.WordContext_Ids,
                 TypeOfLearnedMedium = type.ToString()
             };
             
 
-            if (alternativeNames.Length > 0)
-            {
-                if(alternativeNames[0].Length != 0)
-                {
-                    word = addInclinationWords(word, alternativeNames);
-                }
-            }
+            //if (alternativeNames.Length > 0)
+            //{
+            //    if(alternativeNames[0].Length != 0)
+            //    {
+            //        word = addInclinationWords(word, alternativeNames);
+            //    }
+            //}
             
-            int result = WordCreator.CreateWord(word);
-            if (result == -1)
-            {
-                MessageBox.Show("The word already exists.");
-            }
+            int result =  WordCreator.CreateWord(word);
+            return result;
+            //if (result == -1)
+            //{
+            //    MessageBox.Show("The word already exists.");
+            //}
         }
         private static Word addInclinationWords(Word word, string[] alternativeNames)
         {

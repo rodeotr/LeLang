@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:SubProgWPF.Views.Learn"
              xmlns:views="clr-namespace:SubProgWPF.Views.Learn"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks" 
-             xmlns:vms="clr-namespace:SubProgWPF.ViewModels.Learning" 
+             xmlns:vms="clr-namespace:SubProgWPF.ViewModels.Learn" 
+             xmlns:vmsTabs="clr-namespace:SubProgWPF.ViewModels.Learn.Tabs" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -15,16 +16,16 @@
     </UserControl.Resources>
     <Grid>
         <Grid.Resources>
-            <DataTemplate DataType="{x:Type vms:TabAddMediaViewModel}">
-                <views:tabAddMediaAltView/>
+            <DataTemplate DataType="{x:Type vmsTabs:TabAddMediaViewModel}">
+                <views:tabAddMediaView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vms:TabContinueMediaViewModel}">
+            <DataTemplate DataType="{x:Type vmsTabs:TabContinueMediaViewModel}">
                 <views:tabContinueMediaView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vms:TabAddWordViewModel}">
+            <DataTemplate DataType="{x:Type vmsTabs:TabAddWordViewModel}">
                 <views:tabAddWordView/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vms:TabAddExpressionViewModel}">
+            <DataTemplate DataType="{x:Type vmsTabs:TabAddExpressionViewModel}">
                 <views:tabExpressionsView/>
             </DataTemplate>
         </Grid.Resources>

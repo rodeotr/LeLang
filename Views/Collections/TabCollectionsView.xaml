@@ -6,11 +6,13 @@
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:root="clr-namespace:SubProgWPF.Views.LeftPanel" 
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-             xmlns:local="clr-namespace:SubProgWPF.Views.Collections"
+             xmlns:local="clr-namespace:SubProgWPF.Views.LeftPanel"
              mc:Ignorable="d" 
              d:DesignHeight="450" Margin="20 0">
     <UserControl.Resources>
         <root:CommandConverter x:Key="commandConverter"/>
+        <local:ContextConverter x:Key="multiConverter"/>
+
     </UserControl.Resources>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
         <ScrollViewer.Resources>
@@ -45,8 +47,22 @@
                                     </LinearGradientBrush.RelativeTransform>
                                 </LinearGradientBrush>
                             </Border.Background>
+                            
                             <Border.InputBindings>
-                                <MouseBinding Gesture="LeftClick" Command="{Binding DataContext.TabCollectionsCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}"/>
+                                <MouseBinding Gesture="LeftClick" Command="{Binding DataContext.TabCollectionsCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}}}">
+                                    <MouseBinding.CommandParameter>
+                                        <MultiBinding Converter="{StaticResource multiConverter}">
+                                            <Binding>
+                                                <Binding.Source>
+                                                    Main
+                                                </Binding.Source>
+                                            </Binding>
+                                            <Binding Path=".">
+                                            </Binding>
+                                        </MultiBinding>
+                                    </MouseBinding.CommandParameter>
+                                </MouseBinding>
+
                             </Border.InputBindings>
                             <Border.Style>
                                 <Style>
@@ -98,7 +114,7 @@
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <Border Cursor="Hand" Grid.Column="1" Width="26" Height="26" Background="White" CornerRadius="30 15 15 15">
+                                        <Border Cursor="Hand" Grid.Column="1" Width="26" Height="26" Background="White" CornerRadius="30 15 15 15" Panel.ZIndex="10">
                                             <Border.InputBindings>
                                                 <MouseBinding Gesture="LeftClick" Command="{Binding DataContext.TabCollectionsCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}"/>
                                             </Border.InputBindings>

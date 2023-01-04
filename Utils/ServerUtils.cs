@@ -74,8 +74,7 @@ namespace SubProgWPF.Utils
         public static async Task<string> AllCollectionsHttpGetRequestAsync()
         {
             string html = string.Empty;
-            //string url = @"http://18.184.60.51/WR3dEWtCi17j0yqYflAl/";
-            string url = @"http://localhost:51524/WR3dEWtCi17j0yqYflAl/";
+            string url = @"http://18.184.60.51/WR3dEWtCi17j0yqYflAl/";
 
             string result;
             using (var client = new HttpClient())

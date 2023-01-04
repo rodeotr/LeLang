@@ -25,6 +25,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using SubProgWPF.Models;
+using LangDataAccessLibrary.Services.IServices;
+using Microsoft.Extensions.Hosting;
 
 namespace SubProgWPF
 {
@@ -33,17 +35,33 @@ namespace SubProgWPF
     /// </summary>
     public partial class App : Application
     {
+        private readonly IHost _host;
         private readonly NavigationStore _navigationStore;
 
         public App()
         {
+            _host = Host.CreateDefaultBuilder().ConfigureServices(services =>
+            {
+                services.AddSingleton(new DataContextFactory());
+                services.AddSingleton(this);
+                services.AddSingleton<NavigationStore>();
+                services.AddSingleton<IAppServices, AppServices>();
+                services.AddSingleton((s) => new MainViewModel(s.GetRequiredService<NavigationStore>()));
+                services.AddSingleton<MainWindow>();
+
+
+            }).Build();
             _navigationStore = new NavigationStore();
+            App.Current.Properties["AppHost"] = _host;
             
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            bool isAppRunningFirstTime = AppServices.isAppRunningFirstTime();
+            _host.Start();
+
+            AppServices appServices = (AppServices)_host.Services.GetRequiredService<IAppServices>();
+            bool isAppRunningFirstTime = appServices.isAppRunningFirstTime();
             if (isAppRunningFirstTime)
             {
                 firstTimeRunningSequence();
@@ -58,13 +76,16 @@ namespace SubProgWPF
         public void launchMainWindow()
         {
             SetLanguageDictionary();
-            MainWindow window = new MainWindow() { DataContext = new MainViewModel(_navigationStore) };
+            //MainWindow window = new MainWindow() { DataContext = new MainViewModel(_navigationStore) };
+            MainWindow window = _host.Services.GetRequiredService<MainWindow>();
+            window.DataContext = _host.Services.GetRequiredService<MainViewModel>();
             window.Show();
         }
 
         private void firstTimeRunningSequence()
         {
-            AppServices.initializeLanguages();
+            AppServices appServices = (AppServices)_host.Services.GetRequiredService<IAppServices>();
+            //appServices.addAllLanguagesToDB();
             FirstTimeSignUpWindow firstTimeSignUp = new FirstTimeSignUpWindow(this);
             firstTimeSignUp.Show();
             
@@ -82,7 +103,15 @@ namespace SubProgWPF
             
             this.Resources.MergedDictionaries.Add(dict);
         }
-
-
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            _host.Dispose();
+            IHost mainHost = (IHost)App.Current.Properties["MainViewModelHost"];
+            if(mainHost != null)
+            {
+                mainHost.Dispose();
+            }
+            
+        }
     }
 }

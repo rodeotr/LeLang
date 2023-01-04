@@ -13,6 +13,7 @@ namespace SubProgWPF.Models
         public string EpisodeIndex;
         public string SeasonIndex;
         public string Link;
+        public int TranscriptionId;
         public string TranscriptionLocation;
         public string MaxWordFrequency = "2";
     }

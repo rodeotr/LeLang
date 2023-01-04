@@ -7,10 +7,10 @@ namespace SubProgWPF.Learning.Interfaces
 {
     public interface IMedia
     {
-        string Name { get;}
-        string TranscriptionLocation { get;}
-        string MaxWordFreq { get;}
-        MediaTypes.TYPE Type { get;}
-        int TranscriptionId { get; set; }
+        public string Name { get; set; }
+        public string TranscriptionLocation { get; set; }
+        public string MaxWordFreq { get; set; }
+        public MediaTypes.TYPE Type { get; set; }
+        public int TranscriptionId { get; set; }
     }
 }

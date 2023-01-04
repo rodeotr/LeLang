@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SubProgWPF.Learning.AddMedia
 {
-    class Media : IMedia
+    public class Media : IMedia
     {
         private string _name;
         private string _transcriptionLocation;

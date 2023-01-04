@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:local="clr-namespace:SubProgWPF"
+             Exit="Application_Exit"
              
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
     <Application.Resources>
@@ -1033,6 +1034,30 @@
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"  CornerRadius="1" Width="40px" Height="40px" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/> 
+                        </Border>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#673ab7"/>
+
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+
+        <Style x:Key="wordInflectionCancelButton" TargetType="Button">
+            <Setter Property="Background" Value="red"/>
+            <Setter Property="Foreground" Value="#fff"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"  CornerRadius="10" Width="20px" Height="20px" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
 
                     </ControlTemplate>

@@ -20,6 +20,7 @@
     <None Remove="Assets\Images\Avatars\Female\female1.png" />
     <None Remove="Assets\Images\Avatars\Male\male1.png" />
     <None Remove="Assets\Images\book1.png" />
+    <None Remove="Assets\Images\cloud.png" />
     <None Remove="Assets\Images\collection.png" />
     <None Remove="Assets\Images\despacito.jpg" />
     <None Remove="Assets\Images\exam.jpg" />
@@ -41,6 +42,13 @@
     <None Remove="Assets\Images\LanguageFlags\tr.png" />
     <None Remove="Assets\Images\success.jpg" />
     <None Remove="Assets\Sounds\Effects\click.mp3" />
+    <None Remove="ResourceDictionary\WordParsing.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ResourceDictionary\WordParsing.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -67,16 +75,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LangDataAccessLibrary\LangDataAccessLibrary.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="XamlRadialProgressBar">
       <HintPath>..\..\..\Desktop\XamlRadialProgressBar_v1.0.3\XamlRadialProgressBar.dll</HintPath>
     </Reference>
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\Collections\TabCollectionsMediaView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\LeftPanel\TabBrowseView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Windows\AddLanguageWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -100,7 +110,7 @@
     <Compile Update="Views\Learn\AddMedia\TVSeries.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Learn\tabAddMediaAltView.xaml.cs">
+    <Compile Update="Views\Learn\tabAddMediaView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Collections\TabCollectionsBrowseView.xaml.cs">
@@ -146,12 +156,36 @@
     <Compile Update="Windows\Collections\EditCollectionWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Windows\EditWordExamplesWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\EditWordInflectionsWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\EditWordWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Windows\ShowCollectionContextsWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Windows\ShowExampleWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="ResourceDictionary\WordParsing.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Collections\TabCollectionsMediaView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\LeftPanel\TabBrowseView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Windows\AddLanguageWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -180,7 +214,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Learn\tabAddMediaAltView.xaml">
+    <Page Update="Views\Learn\tabAddMediaView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -236,7 +270,23 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Windows\EditWordExamplesWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\EditWordInflectionsWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\EditWordWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Windows\ShowCollectionContextsWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Windows\ShowExampleWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -246,6 +296,7 @@
     <Resource Include="Assets\Images\Avatars\Female\female1.png" />
     <Resource Include="Assets\Images\Avatars\Male\male1.png" />
     <Resource Include="Assets\Images\book1.png" />
+    <Resource Include="Assets\Images\cloud.png" />
     <Resource Include="Assets\Images\collection.png" />
     <Resource Include="Assets\Images\despacito.jpg" />
     <Resource Include="Assets\Images\exam.jpg" />
@@ -278,6 +329,10 @@
 
   <ItemGroup>
     <Folder Include="Content\Collections\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LangDataAccessLibrary\LangDataAccessLibrary.csproj" />
   </ItemGroup>
 
 </Project>

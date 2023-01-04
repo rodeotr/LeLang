@@ -27,7 +27,7 @@ namespace SubProgWPF.Utils
         {
             _book = book;
         }
-        public List<TempWord> GetAllWordObjectsFromPDF(int startingPage, BackgroundWorker worker)
+        public List<TempWord> GetAllWordObjectsFromPDF(BackgroundWorker worker)
         {
 
             string text = "";
@@ -35,7 +35,7 @@ namespace SubProgWPF.Utils
             using (UglyToad.PdfPig.PdfDocument document = UglyToad.PdfPig.PdfDocument.Open(stream))
             {
                 string ss = "";
-                for (int i = startingPage; i < startingPage + _book.PPS; i++)
+                for (int i = _book.StartPage; i < _book.EndPageOfSection; i++)
                 {
                     var page = document.GetPage(i);
                     text = text + " " + string.Join(" ", page.GetWords());
@@ -82,17 +82,18 @@ namespace SubProgWPF.Utils
                     {
                         if (w.Contains(word_str))
                         {
-                            int contextId = createWordContext(w, "");
-                            wContext_Ids.Add(contextId);
+                            //int contextId = createWordContext(w, "");
+                            //wContext_Ids.Add(contextId);
                         }
                     }
 
                     TempWord word = new TempWord()
                     {
                         Name = word_str,
-                        FirstTimeTranscriptionId = _book.TranscriptionId,
+                        //FirstTimeTranscription = _book.Transcription,
                         InitDate = DateTime.Now,
-                        WordContext_Ids = String.Join(",", wContext_Ids.ConvertAll<string>(a => a.ToString()))
+
+                        //WordContext_Ids = String.Join(",", wContext_Ids.ConvertAll<string>(a => a.ToString()))
                     };
 
                     words.Add(word);
@@ -114,7 +115,7 @@ namespace SubProgWPF.Utils
             else { transcriptionId = transcriptionAddress.Id; }
 
             Address address = new Address();
-            address.TranscriptionAddress_Id = transcriptionId;
+            //address.TranscriptionAddress_Id = transcriptionId;
             address.SubLocation = time;
 
             WordContext context = new WordContext()

@@ -18,6 +18,7 @@ namespace SubProgWPF.Models
         private ObservableCollection<WordMember> _currentMembers;
         private ObservableCollection<WordMember> _allMembers;
         List<Word> _words;
+        List<Collections> _collections;
 
         public int CurrentPage { get => _currentPage; set => _currentPage = value; }
         public ObservableCollection<WordMember> CurrentMembers { get => _currentMembers; set => _currentMembers = value; }
@@ -26,6 +27,7 @@ namespace SubProgWPF.Models
         public StorageWordsModel(List<Word> words)
         {
             _words = words;
+            _collections = CollectionServices.getCollections();
             populateAllMembers();
             updateCurrentMembers();
         }
@@ -57,14 +59,33 @@ namespace SubProgWPF.Models
             int counter = 1;
             foreach(Word w in _words)
             {
+                bool hasCollection = false;
+                foreach(Collections c in _collections)
+                {
+                    foreach (Word word in c.Words)
+                    {
+                        if(w.Id == word.Id)
+                        {
+                            hasCollection = true;
+                            break;
+                        }
+                    }
+                    if (hasCollection)
+                    {
+                        break;
+                    }
+                }
                 ObservableCollection<StorageContext> contexts = getContextCollection(w);
       
                 WordMember m = new WordMember { 
+                    Word = w,
                     Number = counter.ToString(), 
                     Character = w.Name.Substring(0, 1), 
                     BGColor = (Brush)converter.ConvertFromString(getRandomColor()), 
                     Name = w.Name, 
-                    Contexts = contexts};
+                    Contexts = contexts,
+                    HasCollection = hasCollection
+                };
                 _allMembers.Add(m);
                 counter += 1;
             }
@@ -103,21 +124,23 @@ namespace SubProgWPF.Models
         private ObservableCollection<StorageContext> getContextCollection(Word w)
         {
             ObservableCollection<StorageContext> list = new ObservableCollection<StorageContext>();
-            string[] contextArray = w.WordContext_Ids.Split(",");
-            if(contextArray[0].Length > 0)
+            //string[] contextArray = w.WordContext_Ids.Split(",");
+            if(w.Contexts.Count > 0)
             {
-                for (int i = 0; i < contextArray.Length; i++)
+                for (int i = 0; i < w.Contexts.Count; i++)
                 {
-                    WordContext a = WordServices.getWordContextByID(Int32.Parse(contextArray[i]));
+                    //WordContext a = WordServices.getWordContextByID(Int32.Parse(contextArray[i]));
+                    WordContext a = w.Contexts[i];
 
-                    TranscriptionAddress tA = TranscriptionServices.getTranscriptionByID(a.Address.TranscriptionAddress_Id);
+                    //TranscriptionAddress tA = TranscriptionServices.getTranscriptionByID(a.Address.TranscriptionAddress_Id);
+                    TranscriptionAddress tA = a.Address.TranscriptionAddress;
                     StorageContext sC = new StorageContext()
                     {
                         Word = w.Name,
                         IconKind = a.Type == MediaTypes.TYPE.TVSeries ? "DesktopMac" :
                         a.Type == MediaTypes.TYPE.Book ? "Book" :
                         a.Type == MediaTypes.TYPE.Youtube ? "Youtube" : "Close",
-                        Context = a.Content,
+                        Context = a,
                         Medium = a.Type.ToString(),
                         Time = a.Address.SubLocation,
                         MediaLocation = tA.MediaLocation,
@@ -138,6 +161,9 @@ namespace SubProgWPF.Models
         public string Name { get; set; }
         public ObservableCollection<StorageContext> Contexts { get; set; }
         public Brush BGColor { get; set; }
+        public Word Word { get; set; }
+        public bool HasCollection { get; set; }
+
     }
     public class StorageContext
     {
@@ -145,7 +171,7 @@ namespace SubProgWPF.Models
         public string Word { get; set; }
         public string Medium { get; set; }
         public string IconKind { get; set; }
-        public string Context { get; set; }
+        public object Context { get; set; }
         public string MediaLocation { get; set; }
         public string Time { get; set; }
     }

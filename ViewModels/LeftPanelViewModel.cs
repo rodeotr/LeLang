@@ -1,7 +1,10 @@
 ﻿using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SubProgWPF.Commands;
 using SubProgWPF.Models;
+using SubProgWPF.ViewModels.Test;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,15 +23,14 @@ namespace SubProgWPF.ViewModels
         private readonly MenuTestDashViewModel _tabTestDashViewModel;
         private ObservableCollection<UserLanguage> _languages;
         private UserInfo _userInfo;
-        private readonly LeftPanelModel _leftPanel;
+        private LeftPanelModel _leftPanel;
         private string _avatarPath;
         private string _languageSymbolPath;
-        private string _testWordCount;
+        private string _testWordCount = "0";
         private bool _testVisibility;
         
         
         public ICommand LeftPanelCommand => _leftPanelCommand;
-
         public string AvatarPath { get => _avatarPath; set { _avatarPath = value; OnPropertyChanged(nameof(AvatarPath)); } }
         public string LanguageSymbolPath { get => _languageSymbolPath; set { _languageSymbolPath = value; OnPropertyChanged(nameof(LanguageSymbolPath)); } }
 
@@ -43,17 +45,20 @@ namespace SubProgWPF.ViewModels
 
         public LeftPanelViewModel(LeftPanelModel leftPanel, MainViewModel mainViewModel)
         {
+            IHost mainHost = (IHost)App.Current.Properties["MainViewModelHost"];
 
             _mainViewModel = mainViewModel;
-            _tabTestDashViewModel = (MenuTestDashViewModel)_mainViewModel.TabTestDashViewModel;
-            _testWordCount = _tabTestDashViewModel.Model.TotalWordsToBeTested.ToString();
             TestVisibility = Int32.Parse(_testWordCount) > 0;
             _leftPanel = leftPanel;
             _leftPanelCommand = new LeftPanelCommand(this);
 
             
             updateTheFields();
-
+        }
+        public void updateTestWordCount(int count)
+        {
+            TestWordCount = count.ToString();
+            TestVisibility = Int32.Parse(_testWordCount) > 0;
         }
 
         private void setUserInfo()
@@ -109,10 +114,14 @@ namespace SubProgWPF.ViewModels
             _avatarPath += isMale ? "Male/male1.png" : "Female/female1.png";
             LanguageSymbolPath = _languageSymbolPath;
 
-            TestVisibility = Int32.Parse(TestWordCount) > 0;
+            //TestVisibility = Int32.Parse(TestWordCount) > 0;
 
             OnPropertyChanged(nameof(Languages));
             OnPropertyChanged(nameof(UserInfo));
+        }
+        public void LeftPanelChanged()
+        {
+            OnPropertyChanged(nameof(LeftPanel));
         }
     }
     public class UserLanguage

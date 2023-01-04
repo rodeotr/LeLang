@@ -93,7 +93,23 @@
 
 				<!--<Button Style="{DynamicResource ButtonStyleTestWord}" FontFamily="Century Gothic" Content="{Binding Word}" Background="Transparent" BorderThickness="0" Margin="0 0 0 30"  VerticalAlignment="Top" HorizontalAlignment="Center" Command="{Binding TabTestCommand}" CommandParameter="Meaning"/>-->
 			</Viewbox>
-			<ListView ItemsSource="{Binding Members}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  x:Name="sss" Width="150" Grid.Column="2" SelectedIndex="{Binding SelectedSourceIndex}" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0" Foreground="#fff" FontSize="15px">
+            <ItemsControl Grid.Column="2" Margin="0 0 20 0" ItemsSource="{Binding Members}" HorizontalAlignment="Right">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2" VerticalAlignment="Top"/>
+                    </ItemsPanelTemplate>
+                    
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Style="{StaticResource gridSaveButton}" Command="{Binding DataContext.TabTestCommand,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type ItemsControl}}}" CommandParameter="{Binding}" Width="40px" Height="40px" Margin="0 10 10 0">
+                            <Icon:PackIconMaterial Kind="{Binding IconKind}" Width="30px" Height="30px" Foreground="#fff" />
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+			<!--<ListView ItemsSource="{Binding Members}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  x:Name="sss" Width="150" Grid.Column="2" SelectedIndex="{Binding SelectedSourceIndex}" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Background="Transparent" BorderThickness="0" Foreground="#fff" FontSize="15px">
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal" >
@@ -103,11 +119,10 @@
 						</StackPanel>
 					</DataTemplate>
 				</ListView.ItemTemplate>
-			</ListView>
+			</ListView>-->
 		
-        </Grid>
-				
-		<Grid  TextBlock.Foreground="white" TextBlock.FontSize="60" VerticalAlignment="Center" HorizontalAlignment="Center" TextBlock.FontFamily="Century Gothic" Grid.Row="2" Margin="10 0 10 70">
+		</Grid>
+        <Grid Grid.Row="2" TextBlock.Foreground="white" TextBlock.FontSize="60" VerticalAlignment="Center" HorizontalAlignment="Center" TextBlock.FontFamily="Century Gothic" Margin="10 0 10 70">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>

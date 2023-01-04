@@ -2,6 +2,7 @@
 using LangDataAccessLibrary.Models;
 using LangDataAccessLibrary.Services;
 using SubProgWPF.Commands;
+using SubProgWPF.Commands.Collections;
 using SubProgWPF.Models;
 using SubProgWPF.Stores;
 using SubProgWPF.Windows.Collections;

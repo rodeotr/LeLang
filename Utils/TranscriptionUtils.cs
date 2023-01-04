@@ -7,8 +7,7 @@ namespace SubProgWPF.Utils
 {
     public class TranscriptionUtils
     {
-        private static string timePattern = @"\b[\d]{2}:[\d]{2}:[\d]{2},[\d]{3}";
-        public static string getContextFromTimestamp(string wholeText, string timeStamp)
+        public static string getContextFromTimestamp(string wholeText, string timeStamp, string timePattern)
         {
             if (timeStamp.Length == 0)
             {
@@ -19,7 +18,7 @@ namespace SubProgWPF.Utils
             tLocation = tLocation < 0 ? 0 : tLocation;
             string precedingText = getPrecedingText(wholeText, timeStamp);
             //string precedingText = wholeText.Substring(0, tLocation);
-            int indexOfColon = getLastIndexOfSemiColon(precedingText);
+            int indexOfColon = getLastIndexOfSemiColon(precedingText, timePattern);
             //int indexOfColon = precedingText.LastIndexOf(":");
 
             //wholeText = precedingText.Substring(indexOfColon + 14, precedingText.Length - indexOfColon - 19);
@@ -68,29 +67,7 @@ namespace SubProgWPF.Utils
 
         }
 
-        /// <summary>
-        /// Returns the timestamp that immediately comes  after the word
-        /// </summary>
-        /// <param name="v"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public static string getTimeValueOfTheMatch(int wordStartIndex, string text)
-        {
-            
-
-            text = text.Substring(wordStartIndex, text.Length - wordStartIndex > 200 ? 200 : text.Length - wordStartIndex - 1);
-            Regex rg = new Regex(timePattern);
-            MatchCollection matchedAuthors = rg.Matches(text);
-            try
-            {
-                return matchedAuthors[0].Value;
-            }
-            catch
-            {
-                Console.WriteLine("timestamp couldn't be found");
-                return "";
-            }
-        }
+        
 
         public static string getRemainingText(string wholeText,string playHeadPos)
         {
@@ -104,7 +81,7 @@ namespace SubProgWPF.Utils
             return remainingText;
         }
 
-        private static int getLastIndexOfSemiColon(string precedingText)
+        private static int getLastIndexOfSemiColon(string precedingText, string timePattern)
         {
             Regex rg = new Regex(timePattern);
             MatchCollection matchedAuthors = rg.Matches(precedingText);

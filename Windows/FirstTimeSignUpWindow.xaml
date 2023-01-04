@@ -366,7 +366,7 @@
         </Border>
             <Border Width="150" Height="100" Panel.ZIndex="1" Grid.RowSpan="6" VerticalAlignment="Bottom" HorizontalAlignment="Center">
                 <Border.Background>
-                    <ImageBrush ImageSource="Assets/Images/cloud.png"/>
+                    <ImageBrush ImageSource="/Assets/Images/cloud.png"/>
                 </Border.Background>
                 <Border.Triggers>
                     <EventTrigger RoutedEvent="Border.Loaded">
@@ -383,7 +383,7 @@
             </Border>
             <Border Width="80" Height="50" Margin="0 0 20 -100" Panel.ZIndex="1" Grid.RowSpan="6" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <Border.Background>
-                    <ImageBrush ImageSource="Assets/Images/cloud.png"/>
+                    <ImageBrush ImageSource="/Assets/Images/cloud.png"/>
                 </Border.Background>
                 <Border.Triggers>
                     <EventTrigger RoutedEvent="Border.Loaded">
@@ -400,7 +400,7 @@
             </Border>
             <Border Width="80" Height="50" Margin="30 0 0 -100" Panel.ZIndex="1" Grid.RowSpan="6" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                 <Border.Background>
-                    <ImageBrush ImageSource="Assets/Images/cloud.png"/>
+                    <ImageBrush ImageSource="/Assets/Images/cloud.png"/>
                 </Border.Background>
                 <Border.Triggers>
                     <EventTrigger RoutedEvent="Border.Loaded">
